@@ -17,10 +17,10 @@ bookRouter.get("/", (req, res) => {
 
 bookRouter.post("/book", newBook);
 bookRouter.get("/book", getBook);
-bookRouter.get("books", getBooks);
-bookRouter.delete("book", deleteBook);
-bookRouter.put("book", modifyBook);
-bookRouter.get("book/search", searchBook);
+bookRouter.get("/books", getBooks);
+bookRouter.delete("/book", deleteBook);
+bookRouter.put("/book", modifyBook);
+bookRouter.get("/book/search", searchBook);
 bookRouter.post("book/reserve", reserverBook);
 
 export default bookRouter;
