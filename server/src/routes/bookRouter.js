@@ -20,7 +20,7 @@ bookRouter.get("/book", getBook);
 bookRouter.get("books", getBooks);
 bookRouter.delete("book", deleteBook);
 bookRouter.put("book", modifyBook);
-bookRouter.put("book/search", searchBook);
-bookRouter.put("book/reserve", reserverBook);
+bookRouter.get("book/search", searchBook);
+bookRouter.post("book/reserve", reserverBook);
 
 export default bookRouter;
