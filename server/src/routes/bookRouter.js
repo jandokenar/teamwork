@@ -12,15 +12,15 @@ import {
 const bookRouter = express.Router();
 
 bookRouter.get("/", (req, res) => {
-    res.send("hello from library");
+    res.send("hello from library book router");
 });
 
-bookRouter.post("/book", newBook);
-bookRouter.get("/book", getBook);
-bookRouter.get("/books", getBooks);
-bookRouter.delete("/book", deleteBook);
-bookRouter.put("/book", modifyBook);
-bookRouter.get("/book/search", searchBook);
-bookRouter.post("/book/reserve", reserverBook);
+bookRouter.post("/", newBook);
+bookRouter.get("/", getBook);
+bookRouter.get("/all", getBooks);
+bookRouter.delete("/", deleteBook);
+bookRouter.put("/", modifyBook);
+bookRouter.get("/search", searchBook);
+bookRouter.post("/reserve", reserverBook);
 
 export default bookRouter;
