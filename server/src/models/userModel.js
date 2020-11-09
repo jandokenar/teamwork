@@ -3,9 +3,9 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
     name: String,
     email: String,
-    password: Number,
+    password: String,
     registration_date: Date,
-    id: Number,
+    id: String,
     role: String,
     fees: Number,
     borrowed: Array,
