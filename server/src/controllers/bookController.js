@@ -16,6 +16,12 @@ export async function DeleteBookOrFail(req, res) {
             { useFindAndModify: false, new: true },
         ).exec();
         res.status(200).json(updatedBook);
+    }
+}
+export async function GetBookOrFail(req,res) {
+    const book = await bookModel.findOne(req.body.filter).exec();
+    if (book) {
+        res.status(200).json(book);
     } else {
         res.status(400).json({ Error: "NotFound" });
     }
