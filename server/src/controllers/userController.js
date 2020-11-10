@@ -13,15 +13,15 @@ export const newUser = async (req, res) => {
     };
 
     user.password = bcrypt.hashSync(req.body.password, 10);
-    // user.id = await UserModel.countDocuments() + 1; // replace with real id generation
     user.registration_date = new Date();
     user.fees = 0;
     user.borrowed = [];
     user.borrowedHistory = [];
+
     const userData = new UserModel(user);
-    // eslint-disable-next-line no-underscore-dangle
-    userData.id = userData._id.toString();
-    user.id = userData.id;
+    const field = ["_id"]; user.id = userData[field].toString();
+    userData.id = user.id;
+
     await userData.save();
     if (userData) {
         res.status(200).json(user);
@@ -60,6 +60,6 @@ export async function DeleteUserOrFail(req, res) {
     if (user) {
         res.status(200).json(user);
     } else {
-        res.status(400).json({ Error: "NotFound" })
+        res.status(400).json({ Error: "NotFound" });
     }
 }
