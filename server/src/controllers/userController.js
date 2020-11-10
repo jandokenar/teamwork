@@ -3,30 +3,33 @@ import UserModel from "../models/userModel.js";
 
 export const newUser = async (req, res) => {
     const {
-        name, email, registration_date, role,
+        name, email, role,
     } = req.body;
 
     const user = {
         name,
         email,
-        registration_date,
         role,
     };
 
     user.password = bcrypt.hashSync(req.body.password, 10);
-    user.id = await UserModel.countDocuments() + 1; // replace with real id generation
+    // user.id = await UserModel.countDocuments() + 1; // replace with real id generation
+    user.registration_date = new Date();
     user.fees = 0;
     user.borrowed = [];
     user.borrowedHistory = [];
     const userData = new UserModel(user);
+    // eslint-disable-next-line no-underscore-dangle
+    userData.id = userData._id.toString();
+    user.id = userData.id;
     await userData.save();
-
     if (userData) {
-        res.status(200).end(user);
+        res.status(200).json(user);
     } else {
         res.status(404).end();
     }
 };
+
 export async function GetUserOrFail(req, res) {
     const user = await UserModel.findOne(req.body.filter).exec();
     if (user) {
