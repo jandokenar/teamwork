@@ -1,0 +1,11 @@
+POST http://localhost:5000/book
+Content-Type: application/json
+
+{
+    "isbn": "111",
+    "title": "test",
+    "author": "author",
+    "published": "new Date()",
+    "pages": 444,
+    "description": "liirum laarum"
+}

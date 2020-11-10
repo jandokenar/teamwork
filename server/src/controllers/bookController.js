@@ -1,5 +1,35 @@
 import bookModel from "../models/bookModel.js";
 
+export const addBook = async (req, res) => {
+    /* Tähän tulee eka findBook() check et onko kirja jo libraryssa
+        jos on nii lisätään pelkkä kopio */
+    const {
+        isbn, title, author, pages, description,
+    } = req.body;
+
+    const book = {
+        isbn,
+        title,
+        author,
+        published: new Date(),
+        pages,
+        description,
+        copies: [
+            {
+                id: "1",
+                status: "in_library",
+            },
+        ],
+
+    };
+
+    const newBook = await bookModel(book);
+
+    newBook.save();
+
+    res.status(201).json(newBook);
+};
+
 export async function DeleteBookOrFail(req, res) {
     const {
         id,
