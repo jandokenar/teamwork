@@ -65,6 +65,7 @@ export async function ModifyUserOrFail(req, res) {
         id,
         password
     } = req.body;
+    const filter = { id, password };
     const account = await UserModel.findOne(filter).exec();
     if (account) {
         const rd = req.body.replacementData;
