@@ -9,7 +9,7 @@ const bookSchema = new mongoose.Schema({
     description: String,
     copies: [
         {
-            id: String,
+            id: Number,
             status: String,
             due: Date,
             borrower: String,

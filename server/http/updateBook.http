@@ -1,0 +1,11 @@
+PUT http://localhost:5000/library/book
+Content-Type: application/json
+
+{
+        "isbn": "0786838655",
+        "title": "Testi 45",
+        "author": "Uusi kirjailija",
+        "published": "2006-03-01T21:00:00.000Z",
+        "pages": 400,
+        "description": "Testataan"
+}

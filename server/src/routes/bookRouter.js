@@ -1,26 +1,20 @@
 import express from "express";
 import {
-    newBook,
-    getBook,
-    getBooks,
-    deleteBook,
-    modifyBook,
-    searchBook,
-    reserverBook,
+    addBook,
+    GetBookOrFail,
+    updateBook,
 } from "../controllers/bookController.js";
 
 const bookRouter = express.Router();
 
-bookRouter.get("/", (req, res) => {
-    res.send("hello from library book router");
-});
-
-bookRouter.post("/", newBook);
-bookRouter.get("/", getBook);
+bookRouter.post("/", addBook);
+bookRouter.get("/", GetBookOrFail);
+bookRouter.put("/", updateBook);
+/*
 bookRouter.get("/all", getBooks);
 bookRouter.delete("/", deleteBook);
-bookRouter.put("/", modifyBook);
+bookRouter.put("/", updateBook);
 bookRouter.get("/search", searchBook);
 bookRouter.post("/reserve", reserverBook);
-
+*/
 export default bookRouter;

@@ -9,7 +9,7 @@ export const addBook = async (req, res) => {
 
     if (findBook) {
         const newCopy = {
-            id: findBook.copies.length + 1, // väliaikainen id ratkaisu
+            id: findBook.copies[findBook.copies.length - 1].id + 1, // väliaikainen id ratkaisu
             status: "in_library",
         };
         const updatedCopies = [...findBook.copies, newCopy];
@@ -18,7 +18,7 @@ export const addBook = async (req, res) => {
             { copies: updatedCopies },
             { useFindAndModify: false, new: true },
         ).exec();
-        res.status(200).json(updatedBook.copies);
+        res.status(200).json(updatedBook);
     } else {
         const book = {
             isbn,
@@ -29,7 +29,7 @@ export const addBook = async (req, res) => {
             description,
             copies: [
                 {
-                    id: "1",
+                    id: 1,
                     status: "in_library",
                 },
             ],
@@ -71,3 +71,39 @@ export async function GetBookOrFail(req, res) {
         res.status(400).json({ Error: "NotFound" });
     }
 }
+
+export const updateBook = async (req, res) => {
+    const {
+        isbn, title, author, pages, published, description,
+    } = req.body;
+
+    const book = await bookModel.findOne({ isbn }).exec();
+
+    if (book) {
+        const bookToUpdate = {};
+
+        if (title) {
+            bookToUpdate.title = title;
+        }
+        if (author) {
+            bookToUpdate.author = author;
+        }
+        if (pages) {
+            bookToUpdate.pages = pages;
+        }
+        if (published) {
+            bookToUpdate.published = published;
+        }
+        if (description) {
+            bookToUpdate.description = description;
+        }
+        await bookModel.updateOne(
+            { isbn },
+            bookToUpdate,
+            { useFindAndModify: false, new: true },
+        ).exec();
+        res.status(200).json(bookToUpdate);
+    } else {
+        res.status(400).json({ Error: "NotFound" });
+    }
+};
