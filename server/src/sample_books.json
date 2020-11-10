@@ -1,0 +1,162 @@
+[
+    {
+        "isbn": "0679722769",
+        "title": "Ulysses",
+        "author": "James Joyce",
+        "published": "1922-02-02T00:00:00.000Z",
+        "pages": 730,
+        "description": "Ulysses is a modernist novel by Irish writer James Joyce. It was first serialised in parts in the American journal The Little Review from March 1918 to December 1920 and then published in its entirety in Paris by Sylvia Beach on 2 February 1922, Joyce's 40th birthday.",
+        "copies": [
+            {
+                "id": "1",
+                "status": "in_library",
+                "reserveList": []
+            },
+            {
+                "id": "2",
+                "status": "in_library",
+                "reserveList": []
+            },
+            {
+                "id":"3",
+                "status": "in_library",
+                "reserveList": []
+            }
+        ]
+    },
+    {
+        "isbn": "1498599656",
+        "title": "Plato's Socrates on Socrates",
+        "author": "Anne Marie Schultz",
+        "published": "2020-03-18T22:00:00.000Z",
+        "pages": 152,
+        "description": "In Plato's Socrates on Socrates: Socratic Self-Disclosure and the Public Practice of Philosophy, Anne-Marie Schultz analyzes the philosophical and political implications of Plato’s presentation of Socrates’ self-disclosive speech in four dialogues: Theaetetus, Symposium, Apology, and Phaedo. Schultz argues that these moments of Socratic self-disclosure show that Plato’s presentation of “Socrates the narrator” is much more pervasive than the secondary literature typically acknowledges.",
+        "copies": [
+            {
+                "id": "1",
+                "status": "in_library",
+                "reserveList": []
+            },
+            {
+                "id": "2",
+                "status": "in_library",
+                "reserveList": []
+            }
+        ]
+    },
+    {
+        "isbn": "1498599656",
+        "title": "Snow White and the Seven Dwarfs (Disney Classic)",
+        "author": "RH Disney",
+        "published": "2003-09-22T21:00:00.000Z",
+        "pages": 95,
+        "description": "Now new and old fans can relive the magic of Walt Disney's classic Snow White and the Seven Dwarfs as it is retold in a beautiful full-color Little Golden Book!",
+        "copies": [
+            {
+                "id": "1",
+                "status": "in_library",
+                "reserveList": []
+            },
+            {
+                "id": "2",
+                "status": "in_library",
+                "reserveList": []
+            },
+            {
+                "id": "3",
+                "status": "in_library",
+                "reserveList": []
+            },
+            {
+                "id": "4",
+                "status": "in_library",
+                "reserveList": []
+            }
+        ]
+    },
+    {
+        "isbn": "0618002251",
+        "title": "The Fellowship of the Ring",
+        "author": "J.R.R. Tolkien",
+        "published": "1973-02-28T22:00:00.000Z",
+        "pages": 527,
+        "description": "One Ring to rule them all, One Ring to find them, One Ring to bring them all and in the darkeness bind them",
+        "copies": [
+            {
+                "id": "1",
+                "status": "in_library",
+                "reserveList": []
+            },
+            {
+                "id": "2",
+                "status": "in_library",
+                "reserveList": []
+            }
+        ]
+    },
+    {
+        "isbn": "0553588486",
+        "title": "A Game of Thrones",
+        "author": "George R.R. Martin",
+        "published": "1996-08-05T21:00:00.000Z",
+        "pages": 835,
+        "description": "Here is the first volume in George R. R. Martin’s magnificent cycle of novels that includes A Clash of Kings and A Storm of Swords. As a whole, this series comprises a genuine masterpiece of modern fantasy, bringing together the best the genre has to offer",
+        "copies": [
+            {
+                "id": "1",
+                "status": "in_library",
+                "reserveList": []
+            },
+            {
+                "id": "2",
+                "status": "in_library",
+                "reserveList": []
+            }
+        ]
+    },
+    {
+        "isbn": "0439023483",
+        "title": "The Hunger Games",
+        "author": "Suzanne Collins",
+        "published": "2008-09-13T21:00:00.000Z",
+        "pages": 374,
+        "description": "Could you survive on your own in the wild, with every one out to make sure you don't live to see the morning?",
+        "copies": [
+            {
+                "id": "1",
+                "status": "in_library",
+                "reserveList": []
+            },
+            {
+                "id": "2",
+                "status": "in_library",
+                "reserveList": []
+            }
+        ]
+    },
+    {
+        "isbn": "0786838655",
+        "title": "The Lightning Thief",
+        "author": "Rick Riordan",
+        "published": "2006-03-01T21:00:00.000Z",
+        "pages": 375,
+        "description": "Percy Jackson is a good kid, but he can't seem to focus on his schoolwork or control his temper. And lately, being away at boarding school is only getting worse - Percy could have sworn his pre-algebra teacher turned into a monster and tried to kill him.",
+        "copies": [
+            {
+                "id": "1",
+                "status": "in_library",
+                "reserveList": []
+            },
+            {
+                "id": "2",
+                "status": "in_library",
+                "reserveList": []
+            },
+            {
+                "id": "2",
+                "status": "in_library",
+                "reserveList": []
+            }
+        ]
+    }
+]
