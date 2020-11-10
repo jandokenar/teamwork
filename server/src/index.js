@@ -29,7 +29,7 @@ app.use(express.json());
 
 app.use(requestLogger);
 
-app.use("/library/user", userRouter);
+app.use("/library/user/", userRouter);
 app.use("/library/book/", bookRouter);
 
 if (ConnectToDB()) {

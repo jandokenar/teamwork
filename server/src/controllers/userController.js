@@ -19,7 +19,8 @@ export const newUser = async (req, res) => {
     user.borrowedHistory = [];
 
     const userData = new UserModel(user);
-    const field = ["_id"]; user.id = userData[field].toString();
+    const field = ["_id"];
+    user.id = userData[field].toString();
     userData.id = user.id;
 
     await userData.save();
