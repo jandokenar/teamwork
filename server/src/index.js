@@ -21,5 +21,5 @@ app.use("/library/user/", userRouter);
 app.use("/library/book/", bookRouter);
 
 if (ConnectToDB()) {
-    app.listen(port, () => console.log(`Listering to port ${port}`));
+    app.listen(port, () => console.log(`Listening to port ${port}`));
 }
