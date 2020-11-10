@@ -1,6 +1,7 @@
 import express from "express";
 import {
     newUser,
+    ModifyUserOrFail,
 } from "../controllers/userController.js";
 
 const userRouter = express.Router();
@@ -13,7 +14,7 @@ userRouter.post("/borrow/", stub);
 userRouter.post("/return/", stub);
 userRouter.get("/", stub);
 userRouter.get("/all/", stub);
-userRouter.put("/", stub);
+userRouter.put("/", ModifyUserOrFail);
 userRouter.delete("/", stub);
 
 export default userRouter;
