@@ -16,7 +16,7 @@ export async function GetAllUsersOrFail(req, res) {
         res.status(400).json({ Error: "NotFound" });
     }
 }
-export async function DeleteUserOrFailt(req, res) {
+export async function DeleteUserOrFail(req, res) {
     const {
         id,
     } = req.body;
@@ -27,5 +27,10 @@ export async function DeleteUserOrFailt(req, res) {
         filter,
         { useFindAndModify: false },
     );
+    if (user) {
+        res.status(200).json(user);
+    } else {
+        res.status(400).json({ Error: "NotFound" })
+    }
 
 }
