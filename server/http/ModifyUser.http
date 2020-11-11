@@ -1,0 +1,9 @@
+Put http://localhost:5000/library/user/ HTTP/1.1
+Content-Type: application/json
+
+{
+        "id":"",
+        "password":"",
+        "replacementData" : ""
+
+}

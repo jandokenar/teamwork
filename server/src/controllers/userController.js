@@ -64,3 +64,28 @@ export async function DeleteUserOrFail(req, res) {
         res.status(400).json({ Error: "NotFound" });
     }
 }
+export async function ModifyUserOrFail(req, res) {
+    const {
+        id,
+        password
+    } = req.body;
+    const filter = { id, password };
+    const account = await UserModel.findOne(filter).exec();
+    if (account) {
+        const rd = req.body.replacementData;
+
+        //Is there a better way to do this?
+        const name = rd.name ? rd.name : account.name;
+        const password = rd.password ? rd.password : account.password;
+        const email = rd.email ? rd.email : account.email;
+        
+        const updatedAccount = await UserModel.findOneAndUpdate(
+            filter,
+            {...account,name,password,email},
+            {useFindAndModify: false, new: true}
+        ).exec();
+        res.status(200).json(updatedAccount);
+    } else {
+        res.status(400).json({ Error: "NotFound" });
+    }
+}
