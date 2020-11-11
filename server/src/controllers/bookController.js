@@ -72,6 +72,15 @@ export async function GetBookOrFail(req, res) {
     }
 }
 
+export async function GetAllBooksOrFail(req, res) {
+    const books = await bookModel.find(req.body.filter).exec();
+    if (books) { //if books are found, then books is an empty array.
+        res.status(200).json(books);
+    } else {//I don't think that this is ever called since find returns an empty array...
+        res.status(400).json({ Error: "NotFound" });
+    }
+}
+
 export const updateBook = async (req, res) => {
     const {
         isbn, title, author, pages, published, description,
