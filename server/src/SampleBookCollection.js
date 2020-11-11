@@ -1,7 +1,7 @@
 import fs from "fs";
 import express from "express";
 import bookModel from "./models/bookModel.js";
-import addBook from "./controllers/bookController.js";
+import { addBook } from "./controllers/bookController.js";
 const sampleBookFile = "./src/sample_books.json";
 async function MaybeInitializeBookCollection(){
     const count = await bookModel.countDocuments().exec();

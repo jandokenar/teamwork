@@ -39,7 +39,7 @@ export const addBook = async (req, res) => {
         const newBook = await bookModel(book);
 
         newBook.save();
-
+        if (res) //@REMOVE :: Just for adding sample books from json file 
         res.status(201).json(newBook);
     }
 };
