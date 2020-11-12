@@ -70,7 +70,7 @@ export async function GetAllUsersOrFail(req, res) {
 }
 export async function DeleteUserOrFail(req, res) {
     const requester = await GetAndValidateRequestingUser(req);
-    if (requester.role === "admin") {
+    if (requester && !requester.borrowed.length) {
         const {
             id,
         } = req.body;
