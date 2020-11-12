@@ -4,7 +4,6 @@ import {
     GetBookOrFail,
     updateBook,
 } from "../controllers/bookController.js";
-
 const bookRouter = express.Router();
 
 bookRouter.post("/", addBook);

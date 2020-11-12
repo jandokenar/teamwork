@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import UserModel from "../models/userModel.js";
+import BookModel from "../models/bookModel.js";
 import { GetBookByID as GetBookByIsbn } from "./bookController.js";
 
 export const newUser = async (req, res) => {
@@ -35,13 +36,13 @@ async function GetAndValidateRequestingUser(req) {
     const {
         id, password,
     } = req.body;
-    const requester = await userModel.findOne({ id }).exec();
+    const requester = await UserModel.findOne({ id }).exec();
     if(bcrypt.compareSync(password, requester.password))
         return requester;
     return undefined;
 }
 export async function GetUserOrFail(req, res) {
-    const requester = GetAndValidateRequestingUser(req);
+    const requester = await GetAndValidateRequestingUser(req);
     if (requester){
         const user = await UserModel.findOne(req.body.filter).exec();
         //Only allow normal users to seach themselves.
@@ -55,7 +56,7 @@ export async function GetUserOrFail(req, res) {
     }
 }
 export async function GetAllUsersOrFail(req, res) {
-    const requester = GetAndValidateRequestingUser(req);
+    const requester = await GetAndValidateRequestingUser(req);
     if (requester.role === "admin") {
         const allUsers = await UserModel.find().exec();
         if (allUsers) {
@@ -68,7 +69,7 @@ export async function GetAllUsersOrFail(req, res) {
     }
 }
 export async function DeleteUserOrFail(req, res) {
-    const requester = GetAndValidateRequestingUser(req);
+    const requester = await GetAndValidateRequestingUser(req);
     if (requester.role === "admin") {
         const {
             id,
@@ -90,7 +91,7 @@ export async function DeleteUserOrFail(req, res) {
     }
 }
 export async function ModifyUserOrFail(req, res) {
-    const requester = GetAndValidateRequestingUser(req);
+    const requester = await GetAndValidateRequestingUser(req);
     const { id, password } = req.body; 
     const account = (id) ? await UserModel.findOne(id).exec() : requester;
     if (account && (bcrypt.compareSync(password, account.password) ||
@@ -113,29 +114,36 @@ export async function ModifyUserOrFail(req, res) {
         res.status(400).json({ Error: "NotFound" });
     }
 }
+//Maybe this should be part of bookController...
 export async function ReserveBookForUserOrFail(req, res) {
-    const user = GetAndValidateRequestingUser(req);
+    const user = await GetAndValidateRequestingUser(req);
     if (user) {
-        const {
-            isbn,
-        } = req.body;
+        const isbn = req.body.isbn;
         const copy = Number(req.body.copy);
         const book = await GetBookByIsbn(isbn);
-        
-        const bookCopy = book.copies.filter((it) == it.copy === copy);
-        const updatedReserveList = [...bookCopy.reserveList, { reserveId: user.id }];
-        const updatedCopy = {...bookCopy, reserveList: updatedReserveList };
-        const updatedBook = {...book, copies: updatedCopy};
-        console.log(updatedBoook);
-
-        await bookModel.updateOne(
-            { isbn },
-            updatedBook,
-            { useFindAndModify: false, new: true },
-        ).exec();
-
-        res.status(200).json(updatedBook);
+        if (book) {
+            const bookCopy = book.copies.find((it) => it.id === copy);
+            if (bookCopy) {
+                if (!bookCopy.reserveList.find( it => it.reserveId === user.id)) {
+                    bookCopy.reserveList = bookCopy.reserveList.concat(
+                        { reserveId: user.id });
+                    
+                    await BookModel.findOneAndUpdate(
+                        { isbn },
+                        book,
+                        { useFindAndModify: false, new: true },
+                    ).exec();
+                    res.status(200).json(book);
+                } else{
+                    res.status(400).json({ Error: "AlreadyOnReserveList" });
+                }
+            } else {
+                res.status(400).json({ Error: "CopyNotFound" });
+            }
+        } else {
+            res.status(400).json({ Error: "BookNotFound" });
+        }
     } else {
-        res.status(400).json({ Error: "NotFound" });
+        res.status(400).json({ Error: "UserNotFound" });
     }    
 }
