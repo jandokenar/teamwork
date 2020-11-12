@@ -93,6 +93,7 @@ export async function ModifyUserOrFail(req, res) {
 }
 
 export const userBorrowBook = async (req, res) => {
+    const weeks = 12096e5; // 2 week loan in ms
     const account = await UserModel.findOne({ id: req.body.id });
 
     if (account) {
@@ -104,12 +105,12 @@ export const userBorrowBook = async (req, res) => {
             const coopyId = parseInt(req.body.copy, 10);
             const bookCopies = book.copies;
             const borrowDate = new Date();
-            const returnDate = new Date(Date.now() + 12096e5); // 2 weeks in ms
+            const returnDate = new Date(Date.now() + weeks);
             let bookAvailable = false;
 
             const updatedCopies = bookCopies.map((element) => {
                 if (element.id === coopyId && element.status === "in_library" &&
-                element.reserveList.length === 0) {
+                (element.reserveList.length === 0 || element.reserveList[0] === req.body.id)) {
                     bookAvailable = true;
                     const copiesMap = element;
                     copiesMap.status = "borrowed";
