@@ -5,11 +5,11 @@ export const addBook = async (req, res) => {
         isbn, title, author, pages, description,
     } = req.body;
 
-    const findBook = await bookModel.findOne({ title }).exec();
+    const findBook = await bookModel.findOne({ isbn }).exec();
 
     if (findBook) {
         const newCopy = {
-            id: findBook.copies[findBook.copies.length - 1].id + 1, // väliaikainen id ratkaisu
+            id: findBook.copies[findBook.copies.length - 1].id + 1,
             status: "in_library",
         };
         const updatedCopies = [...findBook.copies, newCopy];
@@ -39,32 +39,38 @@ export const addBook = async (req, res) => {
         const newBook = await bookModel(book);
 
         newBook.save();
-        if (res) // @REMOVE :: Just for adding sample books from json file
-        { res.status(201).json(newBook); }
+        res.status(201).json(newBook);
     }
 };
 
-export async function DeleteBookOrFail(req, res) {
+export async function deleteBook(req, res) {
     const {
+        isbn,
         id,
     } = req.body;
-    const filter = {
-        id,
-    };
-    const book = await bookModel.findOneAndRemove(filter).exec();
+
+    const book = await bookModel.findOne({ isbn }).exec();
 
     if (book) {
-        const updatedBook = await bookModel.findOneAndUpdate(
-            filter,
-            { copies: book.copies.filter((it) => it.id !== req.body.copy) },
-            { useFindAndModify: false, new: true },
-        ).exec();
-        res.status(200).json(updatedBook);
+        if (book.copies.length === 0) {
+            await bookModel.deleteOne({ isbn }).exec();
+            res.status(200).json(`Book: ${isbn} deleted.`);
+        } else {
+            const updatedBook = await bookModel.findOneAndUpdate(
+                { isbn },
+                { copies: book.copies.filter((it) => it.id !== id) },
+                { useFindAndModify: false, new: true },
+            ).exec();
+            res.status(200).json(updatedBook);
+        }
+    } else {
+        res.status(400).json({ Error: "NotFound" });
     }
 }
 
 export async function GetBookByID(isbn) {
-    return await bookModel.findOne({ isbn }).exec();
+    const book = await bookModel.findOne({ isbn }).exec();
+    return book;
 }
 
 export async function GetBookOrFail(req, res) {
@@ -72,6 +78,15 @@ export async function GetBookOrFail(req, res) {
     if (book) {
         res.status(200).json(book);
     } else {
+        res.status(400).json({ Error: "NotFound" });
+    }
+}
+
+export async function GetAllBooksOrFail(req, res) {
+    const books = await bookModel.find(req.body.filter).exec();
+    if (books) { // if books are found, then books is an empty array.
+        res.status(200).json(books);
+    } else { // I don't think that this is ever called since find returns an empty array...
         res.status(400).json({ Error: "NotFound" });
     }
 }
