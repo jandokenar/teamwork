@@ -29,9 +29,9 @@ Reserves a book for user
 | ---  |---|---|
 | 200 | book Object after user has been added to the reserve list |
 | 400 | { Error : "AlreadyOnReserveList" } | `id` was already on books reserve list
-| 400 | { Error: "CopyNotFound" } | Books copy wasn\`t found that matches `copy`
-| 400 | { Error: "BookNotFound" } | Book wasn\`t found that has a matching `isbn` 
-| 400 | { Error: "UserNotFound" } | `id` wasn\`t found or `password` was incorrect
+| 400 | { Error: "CopyNotFound" } | Books copy wasn't found that matches `copy`
+| 400 | { Error: "BookNotFound" } | Book wasn't found that has a matching `isbn` 
+| 400 | { Error: "UserNotFound" } | `id` wasn't found or `password` was incorrect
 
 ### PUT /library/user/
 Modifies user
