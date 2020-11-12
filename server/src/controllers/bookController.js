@@ -62,7 +62,9 @@ export async function DeleteBookOrFail(req, res) {
         res.status(200).json(updatedBook);
     }
 }
-
+export async function GetBookByID(isbn) {
+    return await bookModel.findOne({ isbn }).exec();
+}
 export async function GetBookOrFail(req, res) {
     const book = await bookModel.findOne(req.body.filter).exec();
     if (book) {

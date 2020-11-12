@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import UserModel from "../models/userModel.js";
+import { GetBookByID as GetBookByIsbn } from "./bookController.js";
 
 export const newUser = async (req, res) => {
     const {
@@ -111,4 +112,30 @@ export async function ModifyUserOrFail(req, res) {
     } else {
         res.status(400).json({ Error: "NotFound" });
     }
+}
+export async function ReserveBookForUserOrFail(req, res) {
+    const user = GetAndValidateRequestingUser(req);
+    if (user) {
+        const {
+            isbn,
+        } = req.body;
+        const copy = Number(req.body.copy);
+        const book = await GetBookByIsbn(isbn);
+        
+        const bookCopy = book.copies.filter((it) == it.copy === copy);
+        const updatedReserveList = [...bookCopy.reserveList, { reserveId: user.id }];
+        const updatedCopy = {...bookCopy, reserveList: updatedReserveList };
+        const updatedBook = {...book, copies: updatedCopy};
+        console.log(updatedBoook);
+
+        await bookModel.updateOne(
+            { isbn },
+            updatedBook,
+            { useFindAndModify: false, new: true },
+        ).exec();
+
+        res.status(200).json(updatedBook);
+    } else {
+        res.status(400).json({ Error: "NotFound" });
+    }    
 }
