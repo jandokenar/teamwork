@@ -92,7 +92,8 @@ export async function DeleteUserOrFail(req, res) {
 }
 export async function ModifyUserOrFail(req, res) {
     const requester = await GetAndValidateRequestingUser(req);
-    const { id, password } = req.body; 
+    const password  = req.body;
+    const id = req.body.replacementData.id;
     const account = (id) ? await UserModel.findOne(id).exec() : requester;
     if (account && (bcrypt.compareSync(password, account.password) ||
                     requester.role === "admin")) {
