@@ -16,6 +16,7 @@
    
 
 ### PUT /library/user/reserve/
+
 Reserves a book for user
 
 | Parameter Key | Description|
@@ -32,6 +33,7 @@ Reserves a book for user
 | 400 | { Error: "CopyNotFound" } | Books copy wasn't found that matches `copy`
 | 400 | { Error: "BookNotFound" } | Book wasn't found that has a matching `isbn` 
 | 400 | { Error: "UserNotFound" } | `id` wasn't found or `password` was incorrect
+
 
 ### PUT /library/user/
 Modifies user
@@ -57,7 +59,7 @@ Every field in replacement data is optional.
 | 200 | modified user object |
 | 400 | { Error : "NotFound" } | Something went wrong
 
-### Remarks
+#### Remarks
 if `id` is not specified in replacement data, then requester `id` is used.
 Requesting user has to have role "admin" in the following cases:
 - requester `id` doesn't match replacementData `id`.
