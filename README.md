@@ -172,32 +172,34 @@ Delete user
 | DELETE | /library/book/delete | Delete book
 
 ### GET     /library/book/
-Returns first book that matches search criteria
+Returns first book that matches filter
 
 | Parameter Key | Description|
-| ---  |---|
-|      |   |
+| ---    |---|
+| filter | resembles book fields which are used when filtering books |
+
 
 | Return Code | Return Value | Description |
 | ---  |---|---|
-|      |   |   |
-
-#### Remarks
+| 200  | Book []  | all books that match filter  |
+| 400  | { Error: "NotFound"} |
 
 
 ### GET     /library/book/all
-Returns all books
+Returns all books that match filter
 
 | Parameter Key | Description|
-| ---  |---|
-|      |   |
+| ---    |---|
+| filter | resembles book fields which are used when filtering books |
+
 
 | Return Code | Return Value | Description |
 | ---  |---|---|
-|      |   |   |
+| 200  | Book []  | all books that match filter  |
+| 400  | { Error: "NotFound"} |
 
 #### Remarks
-
+Return code shouldn't ever be `400`, "NotFound". Empty array is a possible return value  
 
 ### GET     /library/book/seach
 Returns all books that match search criteria
