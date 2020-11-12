@@ -5,7 +5,6 @@ import {
     updateBook,
     deleteBook,
 } from "../controllers/bookController.js";
-
 const bookRouter = express.Router();
 
 bookRouter.post("/", addBook);
