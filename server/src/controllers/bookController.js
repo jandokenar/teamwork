@@ -126,3 +126,12 @@ export const updateBook = async (req, res) => {
         res.status(400).json({ Error: "NotFound" });
     }
 };
+
+export const getBooks = async (req, res) => {
+    const allBooks = await bookModel.find();
+    if (allBooks) {
+        res.status(200).json(allBooks);
+    } else {
+        res.status(400).json({ Error: "Error" });
+    }
+};

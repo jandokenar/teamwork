@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import userRouter from "./routes/userRouter.js";
-import bookRouter from "./routes/bookRouter.js"; //Commenting this out so we can run
+import bookRouter from "./routes/bookRouter.js";
 import MaybeInitializeBookCollection from "./SampleBookCollection.js"
 
 const requestLogger = (req, res, next) => {

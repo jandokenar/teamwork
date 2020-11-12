@@ -91,6 +91,7 @@ export async function DeleteUserOrFail(req, res) {
     }
 }
 export async function ModifyUserOrFail(req, res) {
+
     const requester = await GetAndValidateRequestingUser(req);
     const password  = req.body;
     const id = req.body.replacementData.id;
@@ -99,22 +100,82 @@ export async function ModifyUserOrFail(req, res) {
                     requester.role === "admin")) {
         const rd = req.body.replacementData;
 
-        //Is there a better way to do this?
         const name = rd.name ? rd.name : account.name;
         const password = rd.password ? rd.password : account.password;
         const email = rd.email ? rd.email : account.email;
-        const role = (rd.role && requester.role === "admin") ? rd.role : account.role; 
 
         const updatedAccount = await UserModel.findOneAndUpdate(
             filter,
-            {...account,name,password,email,role},
-            {useFindAndModify: false, new: true}
+            {
+                ...account, name, password, email,
+            },
+            { useFindAndModify: false, new: true },
         ).exec();
         res.status(200).json(updatedAccount);
     } else {
         res.status(400).json({ Error: "NotFound" });
     }
 }
+
+export const userBorrowBook = async (req, res) => {
+    const weeks = 12096e5; // 2 week loan in ms
+    const account = await UserModel.findOne({ id: req.body.id });
+
+    if (account) {
+        const isPassMatch = bcrypt.compareSync(req.body.password, account.password);
+
+        if (isPassMatch) {
+            const bookIsbn = req.body.isbn;
+            const book = await GetBookByIsbn(bookIsbn);
+            const coopyId = parseInt(req.body.copy, 10);
+            const bookCopies = book.copies;
+            const borrowDate = new Date();
+            const returnDate = new Date(Date.now() + weeks);
+            let bookAvailable = false;
+
+            const updatedCopies = bookCopies.map((element) => {
+                if (element.id === coopyId && element.status === "in_library" &&
+                (element.reserveList.length === 0 || element.reserveList[0] === req.body.id)) {
+                    bookAvailable = true;
+                    const copiesMap = element;
+                    copiesMap.status = "borrowed";
+                    copiesMap.borrower = req.body.id;
+                    copiesMap.due = returnDate;
+                    return copiesMap;
+                }
+                return element;
+            });
+
+            if (bookAvailable) {
+                book.copies = updatedCopies;
+                const borrowed = {
+                    isbn: bookIsbn,
+                    copy: coopyId,
+                    borrow_date: borrowDate,
+                };
+
+                const borrowHistory = {
+                    isbn: bookIsbn,
+                    borrow_date: borrowDate,
+                    return_date: returnDate,
+                };
+
+                account.borrowed = [...account.borrowed, borrowed];
+                account.borrowHistory = [...account.borrowHistory, borrowHistory];
+                await book.save();
+                await account.save();
+
+                res.status(200).json(borrowHistory);
+            } else {
+                res.status(404).end("book not available");
+            }
+        } else {
+            res.status(404).end("invalid password");
+        }
+    } else {
+        res.status(404).end();
+    }
+};
 //Maybe this should be part of bookController...
 export async function ReserveBookForUserOrFail(req, res) {
     const user = await GetAndValidateRequestingUser(req);

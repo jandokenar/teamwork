@@ -1,0 +1,9 @@
+POST http://localhost:5000/library/user/borrow/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "id":"5faa9a9e00064c3df2b3e0c6",
+    "password": "passu",
+    "isbn": "1498599656",
+    "copy": "1"
+}
