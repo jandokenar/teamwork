@@ -35,9 +35,10 @@ Reserves a book for user
 
 ### PUT /library/user/
 Modifies user
+
 | Parameter Key | Description|
 | ---  |---|
-| id | user who issued the request |
+| id | ID of the user who issued the request |
 | password | password string for the corresponding user |
 | replacementData | user fields which to replace |
 
@@ -45,7 +46,7 @@ Modifies user
 Every field in replacement data is optional.
 
 | replacementData Key | Description |
-| --- |
+| --- | --- |
 | id | ID of the user which to be modified | 
 | password | replacement |
 | email | replacement |
