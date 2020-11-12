@@ -39,8 +39,8 @@ export const addBook = async (req, res) => {
         const newBook = await bookModel(book);
 
         newBook.save();
-        if (res) //@REMOVE :: Just for adding sample books from json file 
-        res.status(201).json(newBook);
+        if (res) // @REMOVE :: Just for adding sample books from json file
+        { res.status(201).json(newBook); }
     }
 };
 
@@ -61,6 +61,10 @@ export async function DeleteBookOrFail(req, res) {
         ).exec();
         res.status(200).json(updatedBook);
     }
+}
+
+export async function GetBookByID(isbn) {
+    return await bookModel.findOne({ isbn }).exec();
 }
 
 export async function GetBookOrFail(req, res) {
@@ -105,5 +109,14 @@ export const updateBook = async (req, res) => {
         res.status(200).json(bookToUpdate);
     } else {
         res.status(400).json({ Error: "NotFound" });
+    }
+};
+
+export const getBooks = async (req, res) => {
+    const allBooks = await bookModel.find();
+    if (allBooks) {
+        res.status(200).json(allBooks);
+    } else {
+        res.status(400).json({ Error: "Error" });
     }
 };
