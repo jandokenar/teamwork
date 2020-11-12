@@ -136,6 +136,9 @@ export const userBorrowBook = async (req, res) => {
             const updatedCopies = bookCopies.map((element) => {
                 if (element.id === coopyId && element.status === "in_library" &&
                 (element.reserveList.length === 0 || element.reserveList[0] === req.body.id)) {
+                    if (element.reserveList[0] === req.body.id) {
+                        element.reserveList.shift();
+                    }
                     bookAvailable = true;
                     const copiesMap = element;
                     copiesMap.status = "borrowed";
@@ -162,6 +165,7 @@ export const userBorrowBook = async (req, res) => {
 
                 account.borrowed = [...account.borrowed, borrowed];
                 account.borrowHistory = [...account.borrowHistory, borrowHistory];
+
                 await book.save();
                 await account.save();
 
