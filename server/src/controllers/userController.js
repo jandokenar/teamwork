@@ -111,11 +111,12 @@ export const userBorrowBook = async (req, res) => {
             const updatedCopies = bookCopies.map((element) => {
                 if (element.id === coopyId && element.status === "in_library" &&
                 (element.reserveList.length === 0 || element.reserveList[0] === req.body.id)) {
-                    if (element.reserveList[0] === req.body.id) {
-                        element.reserveList.shift();
+                    const copiesMap = element;
+                    if (copiesMap.reserveList[0] === req.body.id) {
+                        copiesMap.reserveList =
+                        copiesMap.reserveList.slice(1, copiesMap.length);
                     }
                     bookAvailable = true;
-                    const copiesMap = element;
                     copiesMap.status = "borrowed";
                     copiesMap.borrower = req.body.id;
                     copiesMap.due = returnDate;
