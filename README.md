@@ -9,8 +9,8 @@
 | GET    | /library/user/        | Get user
 | GET    | /library/user/all/    | Get all users
 | POST   | /library/user/        | Creates a new user
-| POST   | /library/user/borrow  |
-| POST   | /library/user/return  |
+| POST   | /library/user/borrow  | Borrow a book
+| POST   | /library/user/return  | Return a book
 | PUT    | /library/user/        | Modify user
 | PUT    | /library/user/reserve | Reserves book for user |
 | DELETE | /library/user/        | Delete user
@@ -66,11 +66,15 @@ Creates a new user
 
 | Parameter Key | Description|
 | ---  |---|
-|      |   |
+| name | name of user |
+| email | email of user |
+| password | password of user |
+| role | role of user (admin/employee/customer) |
 
 | Return Code | Return Value | Description |
 | ---  |---|---|
-|      |   |   |
+| 200  | user []  |   |
+| 400  | { Error: "NotFound" } |  
 
 #### Remarks
 
@@ -78,11 +82,16 @@ Creates a new user
 
 | Parameter Key | Description|
 | ---  |---|
-|      |   |
+| id   | id of user |
+| password | password of user |
+| isbn | isbn of book |
+| copy | copy id of book |
 
 | Return Code | Return Value | Description |
 | ---  |---|---|
-|      |   |   |
+| 200  |  history[] |   |
+| 400  | { Error: "invalid password" } |  
+| 400  | { Error: "book not available" } |  
 
 #### Remarks
 
@@ -91,13 +100,19 @@ Creates a new user
 
 | Parameter Key | Description|
 | ---  |---|
-|      |   |
+| id   | id of user |
+| password | password of user |
+| isbn | isbn of book |
+| copy | copy id of book |
 
 | Return Code | Return Value | Description |
 | ---  |---|---|
-|      |   |   |
+| 200  | book `Isbn` returned |   |
+| 400  | { Error: "invalid password" } |  
+| 400  | { Error: "loan not found" } |  
 
 #### Remarks
+If book is returned late adds 1.5€ fee per day to user
 
 ### PUT /library/user/
 Modifies user
