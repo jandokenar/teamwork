@@ -1,8 +1,6 @@
 # API Documentation
 [[_TOC_]]
 
-
-
 ## User
 
 | Request Methods | Endpoint  | Description |
@@ -22,42 +20,46 @@
 
 | Parameter Key | Description|
 | ---  |---|
-|      |   |
+| | |
 
 | Return Code | Return Value | Description |
 | ---  |---|---|
 |      |   |   |
-
+         
 #### Remarks
 
-
-### GET     /library/user/
+### GET /library/user/
 Get user
 
 | Parameter Key | Description|
 | ---  |---|
-|      |   |
-
+| id   |    |
+| password| |
+| filter  resembles user fields which are used when filtering for an user |
+          
 | Return Code | Return Value | Description |
 | ---  |---|---|
-|      |   |   |
+| 200  | user Object that matches filter |   |
+| 400  | { Error: "NotFound |  |
 
 #### Remarks
-
+filter `id` has to match parameter `id` or requester has to have "admin" role. Otherwise request returns { 400, Error: "NotFound" }.
 
 ### GET     /library/user/all/
 Get all users
 
 | Parameter Key | Description|
 | ---  |---|
-|      |   |
+| id   |    |
+| password| |
 
 | Return Code | Return Value | Description |
 | ---  |---|---|
-|      |   |   |
+| 200  | users []  |   |
+| 400  | { Error: "NotFound" } |  
 
 #### Remarks
-
+Requesting user has to have "admin" role for this request to succeed.
 
 ### POST    /library/user/
 Creates a new user
@@ -71,7 +73,6 @@ Creates a new user
 |      |   |   |
 
 #### Remarks
-
 
 ### POST    /library/user/borrow  
 
@@ -151,14 +152,16 @@ Delete user
 
 | Parameter Key | Description|
 | ---  |---|
-|      |   |
+| id   | id of user which to delete |
+| password | |
 
 | Return Code | Return Value | Description |
-| ---  |---|---|
-|      |   |   |
+| ---  | --- | --- |
+| 200  | user Object which was deleted  |   |
+| 400  | { Error: "NotFound"} | 
 
-#### Remarks
-
+#### Remarks   
+If user has books borrowed, request returns { 400, Error: "NotFound" }.
 
 ## Book
 
