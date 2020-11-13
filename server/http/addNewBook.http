@@ -2,10 +2,10 @@ POST http://localhost:5000/library/book
 Content-Type: application/json
 
 {
-    "isbn": "111",
-    "title": "test",
+    "isbn": "112",
+    "title": "testi kirja",
     "author": "author",
-    "published": "new Date()",
-    "pages": 444,
+    "published": "2016-03-01T21:00:00.000Z",
+    "pages": 111,
     "description": "liirum laarum"
 }

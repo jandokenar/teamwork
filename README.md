@@ -253,6 +253,7 @@ Add new book
 | title | book name |
 | author | book author |
 | pages | number of the book pages |
+| published | book publish day |
 | description | short description of the book |
 
 | Return Code | Return Value | Description |
