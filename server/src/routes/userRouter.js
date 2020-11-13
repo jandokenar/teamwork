@@ -4,6 +4,7 @@ import {
     ModifyUserOrFail,
     userBorrowBook,
     ReserveBookForUserOrFail,
+    userReturnBook,
 } from "../controllers/userController.js";
 
 const userRouter = express.Router();
@@ -13,7 +14,7 @@ const stub = (req, res) => { };
 userRouter.get("/borrow/", stub);
 userRouter.post("/", newUser);
 userRouter.post("/borrow/", userBorrowBook);
-userRouter.post("/return/", stub);
+userRouter.post("/return/", userReturnBook);
 userRouter.get("/", stub);
 userRouter.get("/all/", stub);
 userRouter.put("/", ModifyUserOrFail);
