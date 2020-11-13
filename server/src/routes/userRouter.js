@@ -15,6 +15,7 @@ const userRouter = express.Router();
 const stub = (req, res) => { };
 
 userRouter.get("/borrow/", stub);
+
 userRouter.post("/", newUser);
 userRouter.post("/borrow/", userBorrowBook);
 userRouter.post("/return/", userReturnBook);
