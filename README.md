@@ -34,13 +34,13 @@ Get user
 | Parameter Key | Description|
 | ---  |---|
 | id   |    |
-| password| |
-| filter  resembles user fields which are used when filtering for an user |
+| password | |
+| filter | resembles user fields which are used when filtering for an user |
           
 | Return Code | Return Value | Description |
 | ---  |---|---|
 | 200  | user Object that matches filter |   |
-| 400  | { Error: "NotFound |  |
+| 400  | { Error: "NotFound" } |  |
 
 #### Remarks
 filter `id` has to match parameter `id` or requester has to have "admin" role. Otherwise request returns { 400, Error: "NotFound" }.
