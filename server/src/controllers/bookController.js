@@ -39,7 +39,7 @@ export const addBook = async (req, res) => {
         const newBook = await bookModel(book);
 
         newBook.save();
-        res.status(201).json(newBook);
+        res.status(200).json(newBook);
     }
 };
 
@@ -64,7 +64,7 @@ export async function deleteBook(req, res) {
             res.status(200).json(updatedBook);
         }
     } else {
-        res.status(400).json({ Error: "NotFound" });
+        res.status(400).json({ Error: "Not Found" }).end();
     }
 }
 
@@ -79,7 +79,7 @@ export async function getBook(req, res) {
     if (book) {
         res.status(200).json(book);
     } else {
-        res.status(400).json({ Error: "Not Found" });
+        res.status(400).json({ Error: "Not Found" }).end();
     }
 }
 
@@ -115,7 +115,7 @@ export const updateBook = async (req, res) => {
         ).exec();
         res.status(200).json(bookToUpdate);
     } else {
-        res.status(400).json({ Error: "NotFound" });
+        res.status(400).json({ Error: "NotFound" }).end();
     }
 };
 
@@ -124,6 +124,6 @@ export const getBooks = async (req, res) => {
     if (allBooks) {
         res.status(200).json(allBooks);
     } else {
-        res.status(400).json({ Error: "Error" });
+        res.status(400).json({ Error: "Error" }).end();
     }
 };

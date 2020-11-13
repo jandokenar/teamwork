@@ -1,4 +1,4 @@
-POST http://localhost:5000/book
+POST http://localhost:5000/library/book
 Content-Type: application/json
 
 {
