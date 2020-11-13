@@ -219,29 +219,41 @@ Returns all books that match search criteria
 
 
 ### POST    /library/book/
-Add new book 
+Add new book
 
 | Parameter Key | Description|
-| ---  |---|
-|      |   |
+| ---   |---|
+| isbn  | book isbn number |
+| title | book name |
+| author | book author |
+| pages | number of the book pages |
+| description | short description of the book |
 
 | Return Code | Return Value | Description |
 | ---  |---|---|
-|      |   |   |
+| 200  | book object |   |
 
 #### Remarks
-
+if book already in database, then adds copy of the book.
 
 ### PUT     /library/book/
 Update book  
 
 | Parameter Key | Description|
-| ---  |---|
-|      |   |
+| ---   |---|
+| isbn  | book isbn number |
+| title | book name |
+| author | book author |
+| pages | number of the book pages |
+| description | short description of the book |
+
+
+Every field in replacement data is optional.
 
 | Return Code | Return Value | Description |
 | ---  |---|---|
-|      |   |   |
+| 200  | updated book object |   |
+| 400  | { Error: "NotFound" } |   |
 
 #### Remarks
 
@@ -251,11 +263,15 @@ Delete book
 
 | Parameter Key | Description|
 | ---  |---|
-|      |   |
+| isbn | book isbn number |
+| id | book copy id number |
 
 | Return Code | Return Value | Description |
 | ---  |---|---|
-|      |   |   |
+| 200 | Book: ${isbn} deleted. |   |
+| 200 | book object |   |
+| 400 | { Error: "Not Found" } |   |
 
 #### Remarks
-
+Removes book from database.
+if book has copies, removes one copy by id.
