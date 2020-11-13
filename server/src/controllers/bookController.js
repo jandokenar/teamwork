@@ -2,7 +2,7 @@ import bookModel from "../models/bookModel.js";
 
 export const addBook = async (req, res) => {
     const {
-        isbn, title, author, pages, description,
+        isbn, title, author, published, pages, description,
     } = req.body;
 
     const findBook = await bookModel.findOne({ isbn }).exec();
@@ -24,7 +24,7 @@ export const addBook = async (req, res) => {
             isbn,
             title,
             author,
-            published: new Date(),
+            published,
             pages,
             description,
             copies: [
@@ -52,7 +52,7 @@ export async function deleteBook(req, res) {
     const book = await bookModel.findOne({ isbn }).exec();
 
     if (book) {
-        if (book.copies.length === 0) {
+        if (book.copies.length === 1) {
             await bookModel.deleteOne({ isbn }).exec();
             res.status(200).json(`Book: ${isbn} deleted.`);
         } else {
