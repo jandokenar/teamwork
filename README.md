@@ -5,7 +5,7 @@
 
 | Request Methods | Endpoint  | Description |
 | --- | --- |--- |
-| GET    | /library/user/borrow  |
+| GET    | /library/user/borrow  | Get users borrowed books
 | GET    | /library/user/        | Get user
 | GET    | /library/user/all/    | Get all users
 | POST   | /library/user/        | Creates a new user
@@ -20,13 +20,24 @@
 
 | Parameter Key | Description|
 | ---  |---|
-| | |
+| id | requester id |
+| password | requesters password |
+| filter | id of user to seach for |
 
 | Return Code | Return Value | Description |
 | ---  |---|---|
-|      |   |   |
+| 200 | array of borrowed books Objects|
+| 400 |{ Error: "NotFound" }|
          
 #### Remarks
+filter `id` has to match parameter `id` or requester has to have "admin" role. Otherwise request returns { 400, Error: "NotFound" }.
+
+BorrowedBook Object
+| Member keys | Description|
+| --- | --- |
+| isbn | book isbn number|
+| copy | book copy number|
+| borrow_date | When the book was borrowed|
 
 ### GET /library/user/
 Get user
@@ -34,13 +45,13 @@ Get user
 | Parameter Key | Description|
 | ---  |---|
 | id   |    |
-| password| |
-| filter  resembles user fields which are used when filtering for an user |
+| password | |
+| filter | resembles user fields which are used when filtering for an user |
           
 | Return Code | Return Value | Description |
 | ---  |---|---|
 | 200  | user Object that matches filter |   |
-| 400  | { Error: "NotFound |  |
+| 400  | { Error: "NotFound" } |  |
 
 #### Remarks
 filter `id` has to match parameter `id` or requester has to have "admin" role. Otherwise request returns { 400, Error: "NotFound" }.

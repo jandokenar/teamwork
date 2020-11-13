@@ -17,6 +17,5 @@ bookRouter.delete("/", deleteBook);
 
 /*
 bookRouter.get("/search", searchBook);
-bookRouter.post("/reserve", reserverBook);
 */
 export default bookRouter;
