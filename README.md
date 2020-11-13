@@ -33,6 +33,7 @@
 filter `id` has to match parameter `id` or requester has to have "admin" role. Otherwise request returns { 400, Error: "NotFound" }.
 
 BorrowedBook Object
+
 | Member keys | Description|
 | --- | --- |
 | isbn | book isbn number|
