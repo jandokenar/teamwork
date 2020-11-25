@@ -12,6 +12,7 @@ import {
 } from "../controllers/userController.js";
 import {
     AuthenticateLocal,
+    AuthenticateRefreshToken,
     CreateTokens
 } from "../authentication.js";
 
@@ -25,12 +26,16 @@ userRouter.post("/login/", AuthenticateLocal, (req, res) => {
         .status(200)
         .json({ token: tokens.token });
 });
-
 userRouter.post("/logout/", (req, res) => {
     res.clearCookie("refreshToken")
         .status(200)
         .json({ token: null });
 });
+userRouter.post("/refresh", AuthenticateRefreshToken, (req, res) => {
+    const tokens = CreateTokens(req.body.decoded.userID);
+    res.status(200).json({ token: tokens.token });
+});
+            
 userRouter.get("/borrow/", GetUsersCurrentlyBorrowedBooksOrFail);
 
 userRouter.post("/", newUser);

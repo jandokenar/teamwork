@@ -10,9 +10,9 @@ const LoginView = () => {
         console.log(e.target["password"].value);
         Login(e.target["email"].value,
               e.target["password"].value).then(() => {
-                  console.log("Submitted");
+                  context.SetAccessToken(localStorage.getItem("accessToken"));
                   context.SetUserDataIsDirty(true);
-                  
+                  context.SetIsLoggedIn(true);
               }).catch((e) => {
                   console.log(e);
               });
@@ -41,7 +41,6 @@ const UserBanner = () => {
     return(
         
         <div>
-          <p className="TOKEN"> {localStorage.getItem("accessToken")} </p>
           <p> this is user banner </p>
           <LoginView/>
         </div>
