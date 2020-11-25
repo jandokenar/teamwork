@@ -20,8 +20,8 @@ const PageContainer = () => {
             <div className="navBarWrapper">
               {Object.keys(routeViewBindings).map(it => {
                   return (
-                      <Link to={it.replace(" ", "")}>
-                        <button className="navBarButton">
+                      <Link key={it} to={it.replace(" ", "")}>
+                        <button className="navBarButton" >
                           {it}
                         </button>
                       </Link>
@@ -32,7 +32,7 @@ const PageContainer = () => {
             {Object.keys(routeViewBindings).map((it) => {
                 const path = it.replace(" ", "");
                 return (
-                    <Route exact path={`/${path}`}>
+                    <Route exact key={it} path={`/${path}`}>
                       {routeViewBindings[it]}
                     </Route>
                 )})}
