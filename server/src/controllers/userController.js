@@ -270,7 +270,7 @@ export const userReturnBook = async (req, res) => {
         res.status(404).end();
     }
 };
-export function GetUsersCurrentlyBorrowedBooksOrFail(req, res) {
+export async function GetUsersCurrentlyBorrowedBooksOrFail(req, res) {
     const requester = await GetAndValidateRequestingUser(req);
     if (requester) {
         const user = await UserModel.findOne(req.body.filter).exec();

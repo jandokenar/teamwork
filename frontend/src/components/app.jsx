@@ -1,15 +1,27 @@
-import React from "react"
-import PageContainer from "./pageContainer.jsx"
-const App = () => (
-    <div className="rootWrapper">
-      <header className ="loginWrapper">
-        <p>THIS IS LOGIN</p>
-        </header>
-      <PageContainer/>
-      <footer className ="loginWrapper">
-        <p>THIS IS FOOTER</p>
-        </footer>
-      
-    </div>
-)
+import React, { useState } from "react";
+import UserBanner from "./userBanner.jsx";
+import PageContainer from "./pageContainer.jsx";
+
+import UserContext from "./userContext.js";
+const App = () => {
+    
+    const [currentUser, SetCurrentUser] = useState({});
+    const [userDataIsDirty, SetUserDataIsDirty] = useState(false);
+    return (
+        <UserContext.Provider value={{
+                                  SetUserDataIsDirty,
+                                  SetCurrentUser
+                              }}>
+          <div className="rootWrapper">
+            <header className ="loginWrapper">
+              <UserBanner/>
+            </header>
+            <PageContainer/>
+            <footer className ="loginWrapper">
+              <p>THIS IS FOOTER</p>
+            </footer>
+          </div>
+        </UserContext.Provider>
+    )
+}
 export default App;

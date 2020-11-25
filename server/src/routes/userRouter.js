@@ -10,9 +10,27 @@ import {
     DeleteUserOrFail,
     GetUsersCurrentlyBorrowedBooksOrFail,
 } from "../controllers/userController.js";
+import {
+    AuthenticateLocal,
+    CreateTokens
+} from "../authentication.js";
 
 const userRouter = express.Router();
 
+userRouter.post("/login/", AuthenticateLocal, (req, res) => {
+    const { userID } = req.body;
+    const tokens = CreateTokens(userID);
+    console.log(userID);
+    res.cookie("refreshToken", tokens.refreshToken)
+        .status(200)
+        .json({ token: tokens.token });
+});
+
+userRouter.post("/logout/", (req, res) => {
+    res.clearCookie("refreshToken")
+        .status(200)
+        .json({ token: null });
+});
 userRouter.get("/borrow/", GetUsersCurrentlyBorrowedBooksOrFail);
 
 userRouter.post("/", newUser);
