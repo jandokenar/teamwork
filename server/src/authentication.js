@@ -24,14 +24,16 @@ export const RenewAccessToken = (req, res) => {
     res.status(200).json({ token: tokens.token });
 };
 export const AuthenticateLocal = (req, res, next) => {
+    console.log(req.body.email);
+    console.log(req.body.password);
     if (!req.body.email || !req.body.password) {
         return res.status(403).json({ Error: "Not Authorized" });
     }
-    UserModel.findOne({ id: req.body.userID }).then(async (it) => {
+    UserModel.findOne({ email: req.body.email }).then(async (it) => {
         if (!it) return res.status(403).json({ Error: "Not Found" });
         const isMatch = bcrypt.compareSync(req.body.password, it.password);
         if (!isMatch) return res.status(403).json({ Error: "Not Authorized" });
-        
+        req.body = {...req.body, userID: it.id };
         next();
     });
     return;
