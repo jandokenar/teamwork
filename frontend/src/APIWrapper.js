@@ -29,3 +29,6 @@ export const Login = (email, password) => {
         });
     })   
 }
+export const Logout = () => {}
+export const Signup = () => {}
+export const GetUserData = () => {};

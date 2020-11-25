@@ -20,6 +20,7 @@ const userRouter = express.Router();
 userRouter.post("/login/", AuthenticateLocal, (req, res) => {
     const { userID } = req.body;
     const tokens = CreateTokens(userID);
+    console.log(userID);
     res.cookie("refreshToken", tokens.refreshToken)
         .status(200)
         .json({ token: tokens.token });

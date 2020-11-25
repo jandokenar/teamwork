@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Login } from "../APIWrapper.js";
 import UserContext from "./userContext.js";
+import "../css/styleSheet.css";
 const LoginView = () => {
     const context = useContext(UserContext);
 
@@ -9,7 +10,9 @@ const LoginView = () => {
         console.log(e.target["password"].value);
         Login(e.target["email"].value,
               e.target["password"].value).then(() => {
+                  console.log("Submitted");
                   context.SetUserDataIsDirty(true);
+                  
               }).catch((e) => {
                   console.log(e);
               });
@@ -19,7 +22,7 @@ const LoginView = () => {
     return (
         <form onSubmit={SubmitForm}>
           <h3> Login </h3>
-
+          
           <label> Email: </label>
           <br/>
           <input type="email" id="email"/>
@@ -32,13 +35,13 @@ const LoginView = () => {
           <button type="submit"> login </button>
           
         </form>
-
     );
 }
 const UserBanner = () => {
     return(
         
         <div>
+          <p className="TOKEN"> {localStorage.getItem("accessToken")} </p>
           <p> this is user banner </p>
           <LoginView/>
         </div>
