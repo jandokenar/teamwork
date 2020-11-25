@@ -57,6 +57,7 @@ export const AuthenticateRefreshToken = (req, res, next) => {
     const {
         cookies,
     } = req;
+    console.log(cookies);
     jwt.verify(cookies.refreshToken, refreshSecretKey, (err, decoded) => {
         if (err) {
             return res.status(403).json(err);

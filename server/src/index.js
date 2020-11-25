@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import userRouter from "./routes/userRouter.js";
 import bookRouter from "./routes/bookRouter.js";
+import cookieParser from "cookie-parser";
 import MaybeInitializeBookCollection from "./SampleBookCollection.js"
 
 const requestLogger = (req, res, next) => {
@@ -25,6 +26,8 @@ async function ConnectToDB() {
 }
 
 const app = express();
+app.use(cookieParser());
+app.use(express.json());
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "http://localhost:3000");
     res.header("Access-Control-Allow-Credentials", true);
@@ -32,8 +35,6 @@ app.use((req, res, next) => {
     res.header("Access-Control-Allow-Headers", "Content-Type, Accept, Authentication");
     next();
 });
-
-app.use(express.json());
 
 app.use(requestLogger);
 
