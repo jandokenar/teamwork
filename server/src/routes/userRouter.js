@@ -3,11 +3,11 @@ import {
     Login,
     Logout,
     RenewLogin,
-    newUser,
+    CreateNewUser,
     ModifyUserOrFail,
-    userBorrowBook,
+    UserBorrowBook,
     ReserveBookForUserOrFail,
-    userReturnBook,
+    UserReturnBook,
     GetUserOrFail,
     GetAllUsersOrFail,
     DeleteUserOrFail,
@@ -16,8 +16,7 @@ import {
 import {
     AuthenticateLocal,
     AuthenticateAccessToken,
-    AuthenticateRefreshToken,
-    CreateTokens
+    AuthenticateRefreshToken
 } from "../authentication.js";
 
 const userRouter = express.Router();
@@ -34,13 +33,13 @@ userRouter.get("/borrow/",
                AuthenticateAccessToken,
                GetUsersCurrentlyBorrowedBooksOrFail);
 userRouter.post("/",
-                newUser);
+                CreateNewUser);
 userRouter.post("/borrow/",
                 AuthenticateAccessToken,
-                userBorrowBook);
+                UserBorrowBook);
 userRouter.post("/return/",
                 AuthenticateAccessToken,
-                userReturnBook);
+                UserReturnBook);
 userRouter.get("/",
                AuthenticateAccessToken,
                GetUserOrFail);
