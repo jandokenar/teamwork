@@ -100,3 +100,8 @@ export const GetAllBooks = async (setBooks) => {
     setBooks(resp.data);
   }
 }
+
+export const AddBook = async (bookObject) => {
+    const response = await axios.post(`${url}/book/`, bookObject);
+    return response.data;
+};
