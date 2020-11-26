@@ -27,8 +27,7 @@ const PageContainer = () => {
           <Router>
             <div className="navBarWrapper">
               {Object.keys(routeViewBindings).map(it => {
-                  const canDisplay = (routeViewBindings[it].dispalyOffline || context.isLoggedIn);
-                  if(canDisplay) return (
+                  return (
                       <Link key={it} to={it.replace(" ", "")}>
                         <button className="navBarButton" >
                           {it}
@@ -43,7 +42,7 @@ const PageContainer = () => {
                 const path = it.replace(" ", "");
                 return (
                     <Route exact key={it} path={`/${path}`}>
-                      {routeViewBindings[it].view}
+                      {routeViewBindings[it]}
                     </Route>
                 )})}
             </div>
