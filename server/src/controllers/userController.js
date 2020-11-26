@@ -269,7 +269,6 @@ export const UserReturnBook = async (req, res) => {
     } else {
         res.status(404).end("loan not found");
     }
-
 };
 export const GetUsersCurrentlyBorrowedBooksOrFail = async (req, res) => {
     const requester = req.body.user;

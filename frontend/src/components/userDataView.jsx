@@ -2,16 +2,24 @@ import React, { useContext } from "react";
 import UserContext from "./userContext.js";
 
 const BorrowedBooksContainer = () => {
+    const context = useContext(UserContext);
     return (
         <div>
-          <p> books </p>
+          {context.currentUser.borrowed &&
+              context.currentUser.borrowed.map(it => (
+                  <p> Book : {it.isbn} </p>
+              ))}
         </div>
     );
 }
 const BorrowHistoryContainer = () => {
+    const context = useContext(UserContext);
     return (
         <div>
-          <p> history </p>
+          {context.currentUser.borrowHistory &&
+              context.currentUser.borrowHistory.map(it => (
+                  <p> Book : it.isbn </p>
+              ))}
         </div>
     );
 }
@@ -19,9 +27,8 @@ const UserDataView = () => {
     const context = useContext(UserContext);
     
     if(!context.isLoggedIn) return <div/>;
-
-    const user = context.currentUser;
     
+    const user = context.currentUser;
     return (
         <div>
           <div>
