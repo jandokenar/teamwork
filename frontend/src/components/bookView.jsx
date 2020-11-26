@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import GetAllBooks from "../APIWrapper.js";
+import "../css/styleSheet.css";
 
 const UpdateBookView = (books) => {
     return (books.map((key, index) =>
