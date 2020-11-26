@@ -26,7 +26,6 @@ export const RenewAccessToken = () => (
         });
     })
 );
-
 export const Login = (email, password) => {
     return new Promise((resolve, reject) => {
         const options = {
@@ -55,6 +54,43 @@ export const Login = (email, password) => {
         });
     })   
 }
-export const Logout = () => {}
+export const Logout = () => {
+    return new Promise((resolve, reject) => {
+        const options = {
+            method: "post",
+            url: `${url}/user/logout`,
+            credentials: "include",
+            withCredentials: true,
+        };
+        axios(options).then((res) => {
+            localStorage.removeItem("accessToken");
+            resolve();
+        }).catch(() => {
+            localStorage.removeItem("accessToken");
+            reject("Request denied");
+        });
+    })   
+}
 export const Signup = () => {}
-export const GetUserData = () => {};
+export const GetUserData = (accessToken) => {
+    return new Promise((resolve, reject) => {
+        const options = {
+            method: "get",
+            url: `${url}/user/`,
+            credentials: "include",
+            withCredentials: true,
+            headers: {
+                authentication: `Bearer ${accessToken}`,
+            },
+        };
+        axios(options).then((res) => {
+            console.log(res);
+            resolve(res.data);
+        }).catch((e) => {
+            console.log(e);
+            reject(e);
+        });
+    })
+}
+                      
+    
