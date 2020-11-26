@@ -92,5 +92,12 @@ export const GetUserData = (accessToken) => {
         });
     })
 }
-                      
-    
+
+export const GetAllBooks = async (setBooks) => {
+  const req = `${url}/book/all/`;
+
+  const resp = await axios.get(`${req}`);
+  if (resp) {
+    setBooks(resp.data);
+  }
+}
