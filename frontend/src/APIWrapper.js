@@ -46,7 +46,7 @@ export const Login = (email, password) => {
                 localStorage.setItem("accessToken", res.data.token);
                 resolve();
             } else {
-                localStorage.removeItem("accessToken");
+                localStorage.removeItem("accessToken"); 
                 reject("Wrong email or password");
             }
         }).catch(() => {
@@ -71,7 +71,27 @@ export const Logout = () => {
         });
     })   
 }
-export const Signup = () => {}
+export const SignUp = (name, email, password) => {
+    return new Promise((resolve, reject) => {
+        const options = {
+            method: "post",
+            url: `${url}/user/`,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            data: {
+                name,
+                email,
+                password,
+            },   
+        }
+        axios(options).then((res) => {
+            resolve();
+        }).catch(() => {
+            reject();
+        })       
+    })
+}
 export const GetUserData = (accessToken) => {
     return new Promise((resolve, reject) => {
         const options = {
@@ -84,21 +104,19 @@ export const GetUserData = (accessToken) => {
             },
         };
         axios(options).then((res) => {
-            console.log(res);
             resolve(res.data);
         }).catch((e) => {
-            console.log(e);
             reject(e);
         });
     })
 }
 export const GetAllBooks = async (setBooks) => {
-  const req = `${url}/book/all/`;
-
-  const resp = await axios.get(`${req}`);
-  if (resp) {
-    setBooks(resp.data);
-  }
+    const req = `${url}/book/all/`;
+    
+    const resp = await axios.get(`${req}`);
+    if (resp) {
+        setBooks(resp.data);
+    }
 }
 
 export const AddBook = async (bookObject) => {

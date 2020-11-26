@@ -23,7 +23,6 @@ export const GetAndValidateRequestingUser = async (req) => {
 export const Login = async (req, res) => {
     const { userID } = req.body;
     const tokens = CreateTokens(userID);
-    console.log(userID);
     res.cookie("refreshToken", tokens.refreshToken)
         .status(200)
         .json({ token: tokens.token });
@@ -58,7 +57,7 @@ export const CreateNewUser = async (req, res) => {
     const field = ["_id"];
     user.id = userData[field].toString();
     userData.id = user.id;
-
+    
     await userData.save();
     if (userData) {
         res.status(200).json(user);
@@ -68,8 +67,9 @@ export const CreateNewUser = async (req, res) => {
 };
 export const GetUserOrFail = async (req, res) => {
     const requester = req.body.user;
-   
-    const user = await UserModel.findOne(req.body.filter).exec();
+    
+    const user = (req.body.filter)? await UserModel.findOne(req.body.filter).exec():
+          requester;
     // Only allow normal users to seach themselves.
     if (user && (user.id === requester.id || requester.role === "admin")) {
         res.status(200).json(user);
