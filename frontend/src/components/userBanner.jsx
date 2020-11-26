@@ -1,19 +1,18 @@
 import React, { useContext } from "react";
-import { Login } from "../APIWrapper.js";
+import { Login, Logout } from "../APIWrapper.js";
 import UserContext from "./userContext.js";
 import "../css/styleSheet.css";
 const LoginView = () => {
     const context = useContext(UserContext);
 
     const SubmitForm = (e) => {
-        console.log(e.target["email"].value);
-        console.log(e.target["password"].value);
         Login(e.target["email"].value,
               e.target["password"].value).then(() => {
                   context.SetAccessToken(localStorage.getItem("accessToken"));
                   context.SetUserDataIsDirty(true);
                   context.SetIsLoggedIn(true);
               }).catch((e) => {
+                  console.log("Login Form FAIL");
                   console.log(e);
               });
         
@@ -37,12 +36,32 @@ const LoginView = () => {
         </form>
     );
 }
-const UserBanner = () => {
-    return(
-        
+const UserDataBanner = () => {
+    const context = useContext(UserContext);
+    const LogoutOnClick = (e) => {
+        Logout().then(() => {
+            context.SetUserDataIsDirty(true);
+            context.SetIsLoggedIn(false); 
+        }).catch( err => {
+            console.log(err);
+            context.SetUserDataIsDirty(true);
+            context.SetIsLoggedIn(false);
+        });
+    }
+    return (
         <div>
-          <p> this is user banner </p>
-          <LoginView/>
+          <p> Name: {context.currentUser.name} </p>
+          <p> Email: {context.currentUser.email} </p>
+          <button onClick={(e) => LogoutOnClick(e)}> Log Out </button>
+        </div>
+    )
+}
+const UserBanner = () => {
+    const context = useContext(UserContext);
+    
+    return(
+        <div>
+          {context.isLoggedIn ? <UserDataBanner/> : <LoginView/> }
         </div>
     );
 };

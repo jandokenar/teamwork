@@ -2,8 +2,42 @@ import bcrypt from "bcrypt";
 import UserModel from "../models/userModel.js";
 import BookModel from "../models/bookModel.js";
 import { GetBookByID as GetBookByIsbn } from "./bookController.js";
+import { CreateTokens } from "../authentication.js";
+//@NOTE
+//Authentication middleware adds user to request. (req.body.user)
+//If authentication fails, middleware return early and the specified endpoint is not reached. So the passed in user is always valid. BUT middleware doesn't check user role.
 
-export const newUser = async (req, res) => {
+/*
+//Deprecated user login
+//AuthenticateLocal middleware is used for this
+export const GetAndValidateRequestingUser = async (req) => {
+    const {
+        id, password,
+    } = req.body;
+    const requester = await UserModel.findOne({ id }).exec();
+    if (bcrypt.compareSync(password, requester.password)) return requester;
+    return undefined;
+}
+*/
+
+export const Login = async (req, res) => {
+    const { userID } = req.body;
+    const tokens = CreateTokens(userID);
+    console.log(userID);
+    res.cookie("refreshToken", tokens.refreshToken)
+        .status(200)
+        .json({ token: tokens.token });
+}
+export const Logout = async (req, res) => {
+    res.clearCookie("refreshToken")
+        .status(200)
+        .json({ token: null });
+}
+export const RenewLogin = async (req, res) => {
+    const tokens = CreateTokens(req.body.decoded.userID);
+    res.status(200).json({ token: tokens.token });
+}
+export const CreateNewUser = async (req, res) => {
     const {
         name, email, role,
     } = req.body;
@@ -32,30 +66,19 @@ export const newUser = async (req, res) => {
         res.status(404).end();
     }
 };
-async function GetAndValidateRequestingUser(req) {
-    const {
-        id, password,
-    } = req.body;
-    const requester = await UserModel.findOne({ id }).exec();
-    if (bcrypt.compareSync(password, requester.password)) return requester;
-    return undefined;
-}
-export async function GetUserOrFail(req, res) {
-    const requester = await GetAndValidateRequestingUser(req);
-    if (requester) {
-        const user = await UserModel.findOne(req.body.filter).exec();
-        // Only allow normal users to seach themselves.
-        if (user && (user.id === requester.id || requester.role === "admin")) {
-            res.status(200).json(user);
-        } else {
-            res.status(400).json({ Error: "NotFound" });
-        }
+export const GetUserOrFail = async (req, res) => {
+    const requester = req.body.user;
+   
+    const user = await UserModel.findOne(req.body.filter).exec();
+    // Only allow normal users to seach themselves.
+    if (user && (user.id === requester.id || requester.role === "admin")) {
+        res.status(200).json(user);
     } else {
         res.status(400).json({ Error: "NotFound" });
     }
 }
-export async function GetAllUsersOrFail(req, res) {
-    const requester = await GetAndValidateRequestingUser(req);
+export const GetAllUsersOrFail = async (req, res) => {
+    const requester = req.body.user;
     if (requester.role === "admin") {
         const allUsers = await UserModel.find().exec();
         if (allUsers) {
@@ -67,9 +90,9 @@ export async function GetAllUsersOrFail(req, res) {
         res.status(400).json({ Error: "NotFound" });
     }
 }
-export async function DeleteUserOrFail(req, res) {
-    const requester = await GetAndValidateRequestingUser(req);
-    if (requester && !requester.borrowed.length) {
+export const DeleteUserOrFail = async (req, res) => {
+    const requester = req.body.user;
+    if (!requester.borrowed.length) {
         const {
             id,
         } = req.body;
@@ -89,13 +112,15 @@ export async function DeleteUserOrFail(req, res) {
         res.status(400).json({ Error: "NotFound" });
     }
 }
-export async function ModifyUserOrFail(req, res) {
-    const requester = await GetAndValidateRequestingUser(req);
-    const password = req.body;
+export const ModifyUserOrFail = async (req, res) => {
+    const requester = req.body.user;
     const { id } = req.body.replacementData;
-    const account = (id) ? await UserModel.findOne(id).exec() : requester;
-    if (account && (bcrypt.compareSync(password, account.password) ||
-                    requester.role === "admin")) {
+    const account = (id && id !== requester.id) ?
+          await UserModel.findOne(id).exec() :
+          requester;
+    if (account === requester ||
+        requester.role === "admin") {
+
         const rd = req.body.replacementData;
 
         const name = rd.name ? rd.name : account.name;
@@ -103,7 +128,7 @@ export async function ModifyUserOrFail(req, res) {
         const email = rd.email ? rd.email : account.email;
 
         const updatedAccount = await UserModel.findOneAndUpdate(
-            filter,
+            { id: account.id },
             {
                 ...account, name, password, email,
             },
@@ -114,171 +139,143 @@ export async function ModifyUserOrFail(req, res) {
         res.status(400).json({ Error: "NotFound" });
     }
 }
-
-export const userBorrowBook = async (req, res) => {
+export const UserBorrowBook = async (req, res) => {
     const weeks = 12096e5; // 2 week loan in ms
-    const account = await UserModel.findOne({ id: req.body.id });
+    const account = req.body.user;
 
-    if (account) {
-        const isPassMatch = bcrypt.compareSync(req.body.password, account.password);
+    const bookIsbn = req.body.isbn;
+    const book = await GetBookByIsbn(bookIsbn);
+    const coopyId = parseInt(req.body.copy, 10);
+    const bookCopies = book.copies;
+    const borrowDate = new Date();
+    const returnDate = new Date(Date.now() + weeks);
+    let bookAvailable = false;
 
-        if (isPassMatch) {
-            const bookIsbn = req.body.isbn;
-            const book = await GetBookByIsbn(bookIsbn);
-            const coopyId = parseInt(req.body.copy, 10);
-            const bookCopies = book.copies;
-            const borrowDate = new Date();
-            const returnDate = new Date(Date.now() + weeks);
-            let bookAvailable = false;
-
-            const updatedCopies = bookCopies.map((element) => {
-                if (element.id === coopyId && element.status === "in_library" &&
-                (element.reserveList.length === 0 || element.reserveList[0] === req.body.id)) {
-                    const copiesMap = element;
-                    if (copiesMap.reserveList[0] === req.body.id) {
-                        copiesMap.reserveList =
-                        copiesMap.reserveList.slice(1, copiesMap.length);
-                    }
-                    bookAvailable = true;
-                    copiesMap.status = "borrowed";
-                    copiesMap.borrower = req.body.id;
-                    copiesMap.due = returnDate;
-                    return copiesMap;
-                }
-                return element;
-            });
-
-            if (bookAvailable) {
-                book.copies = updatedCopies;
-                const borrowed = {
-                    isbn: bookIsbn,
-                    copy: coopyId,
-                    borrow_date: borrowDate,
-                };
-
-                const borrowHistory = {
-                    isbn: bookIsbn,
-                    borrow_date: borrowDate,
-                    return_date: returnDate,
-                };
-
-                account.borrowed = [...account.borrowed, borrowed];
-                account.borrowHistory = [...account.borrowHistory, borrowHistory];
-
-                await book.save();
-                await account.save();
-
-                res.status(200).json(borrowHistory);
-            } else {
-                res.status(404).end("book not available");
+    const updatedCopies = bookCopies.map((element) => {
+        if (element.id === coopyId && element.status === "in_library" &&
+            (element.reserveList.length === 0 || element.reserveList[0] === req.body.id)) {
+            const copiesMap = element;
+            if (copiesMap.reserveList[0] === req.body.id) {
+                copiesMap.reserveList =
+                    copiesMap.reserveList.slice(1, copiesMap.length);
             }
-        } else {
-            res.status(404).end("invalid password");
+            bookAvailable = true;
+            copiesMap.status = "borrowed";
+            copiesMap.borrower = req.body.id;
+            copiesMap.due = returnDate;
+            return copiesMap;
         }
+        return element;
+    });
+
+    if (bookAvailable) {
+        book.copies = updatedCopies;
+        const borrowed = {
+            isbn: bookIsbn,
+            copy: coopyId,
+            borrow_date: borrowDate,
+        };
+
+        const borrowHistory = {
+            isbn: bookIsbn,
+            borrow_date: borrowDate,
+            return_date: returnDate,
+        };
+
+        account.borrowed = [...account.borrowed, borrowed];
+        account.borrowHistory = [...account.borrowHistory, borrowHistory];
+
+        await book.save();
+        await account.save();
+
+        res.status(200).json(borrowHistory);
     } else {
-        res.status(404).end();
+        res.status(404).end("book not available");
     }
 };
-// Maybe this should be part of bookController...
-export async function ReserveBookForUserOrFail(req, res) {
-    const user = await GetAndValidateRequestingUser(req);
-    if (user) {
-        const { isbn } = req.body;
-        const copy = Number(req.body.copy);
-        const book = await GetBookByIsbn(isbn);
-        if (book) {
-            const bookCopy = book.copies.find((it) => it.id === copy);
-            if (bookCopy) {
-                if (!bookCopy.reserveList.find((it) => it.reserveId === user.id)) {
-                    bookCopy.reserveList = bookCopy.reserveList.concat(
-                        { reserveId: user.id },
-                    );
+export const ReserveBookForUserOrFail = async (req, res) => {
+    const user = req.body.user;
 
-                    await BookModel.findOneAndUpdate(
-                        { isbn },
-                        book,
-                        { useFindAndModify: false, new: true },
-                    ).exec();
-                    res.status(200).json(book);
-                } else {
-                    res.status(400).json({ Error: "AlreadyOnReserveList" });
-                }
+    const { isbn } = req.body;
+    const book = await GetBookByIsbn(isbn);
+    if (book) {
+        const copy = Number(req.body.copy);
+        const bookCopy = book.copies.find((it) => it.id === copy);
+        if (bookCopy) {
+            if (!bookCopy.reserveList.find((it) => it.reserveId === user.id)) {
+                bookCopy.reserveList = bookCopy.reserveList.concat(
+                    { reserveId: user.id },
+                );
+
+                await BookModel.findOneAndUpdate(
+                    { isbn },
+                    book,
+                    { useFindAndModify: false, new: true },
+                ).exec();
+                res.status(200).json(book);
             } else {
-                res.status(400).json({ Error: "CopyNotFound" });
+                res.status(400).json({ Error: "AlreadyOnReserveList" });
             }
         } else {
-            res.status(400).json({ Error: "BookNotFound" });
+            res.status(400).json({ Error: "CopyNotFound" });
         }
     } else {
-        res.status(400).json({ Error: "UserNotFound" });
+        res.status(400).json({ Error: "BookNotFound" });
     }
 }
 
-export const userReturnBook = async (req, res) => {
+export const UserReturnBook = async (req, res) => {
     const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
     const dailyFee = 1.5;
     const thisDay = new Date();
 
-    const account = await UserModel.findOne({ id: req.body.id });
+    const account = req.body.user;
+    
+    const bookIsbn = req.body.isbn;
+    const book = await GetBookByIsbn(bookIsbn);
+    const coopyId = parseInt(req.body.copy, 10);
+    const bookCopies = book.copies;
 
-    if (account) {
-        const isPassMatch = bcrypt.compareSync(req.body.password, account.password);
+    let foundLoan = false;
 
-        if (isPassMatch) {
-            const bookIsbn = req.body.isbn;
-            const book = await GetBookByIsbn(bookIsbn);
-            const coopyId = parseInt(req.body.copy, 10);
-            const bookCopies = book.copies;
-
-            let foundLoan = false;
-
-            const updatedCopies = bookCopies.map((element) => {
-                if (element.id === coopyId && element.status === "borrowed" &&
-                element.borrower === req.body.id) {
-                    const copiesMap = element;
-                    if (copiesMap.due < thisDay) {
-                        const diffDays = Math.round(Math.abs((copiesMap.due - thisDay) / oneDay));
-                        account.fees += diffDays * dailyFee;
-                        console.log(account.fees);
-                    }
-                    copiesMap.status = "in_library";
-                    copiesMap.borrower = "";
-                    copiesMap.due = "";
-                    foundLoan = true;
-                    return copiesMap;
-                }
-                return element;
-            });
-
-            if (foundLoan) {
-                book.copies = updatedCopies;
-                const updatedBorrow = account.borrowed.filter(
-                    (element) => (element.copy !== coopyId && element.isbn !== bookIsbn),
-                );
-                account.borrowed = updatedBorrow;
-
-                await book.save();
-                await account.save();
-                res.status(200).json(`book ${bookIsbn} returned`);
-            } else {
-                res.status(404).end("loan not found");
+    const updatedCopies = bookCopies.map((element) => {
+        if (element.id === coopyId && element.status === "borrowed" &&
+            element.borrower === req.body.id) {
+            const copiesMap = element;
+            if (copiesMap.due < thisDay) {
+                const diffDays = Math.round(Math.abs((copiesMap.due - thisDay) / oneDay));
+                account.fees += diffDays * dailyFee;
+                console.log(account.fees);
             }
-        } else {
-            res.status(404).end("invalid password");
+            copiesMap.status = "in_library";
+            copiesMap.borrower = "";
+            copiesMap.due = "";
+            foundLoan = true;
+            return copiesMap;
         }
+        return element;
+    });
+
+    if (foundLoan) {
+        book.copies = updatedCopies;
+        const updatedBorrow = account.borrowed.filter(
+            (element) => (element.copy !== coopyId && element.isbn !== bookIsbn),
+        );
+        account.borrowed = updatedBorrow;
+
+        await book.save();
+        await account.save();
+        res.status(200).json(`book ${bookIsbn} returned`);
     } else {
-        res.status(404).end();
+        res.status(404).end("loan not found");
     }
+
 };
-export async function GetUsersCurrentlyBorrowedBooksOrFail(req, res) {
-    const requester = await GetAndValidateRequestingUser(req);
-    if (requester) {
-        const user = await UserModel.findOne(req.body.filter).exec();
-        if (user && (user.id === requester.id || requester.role === "admin")) {
-            res.status(200).json(user.borrowed);
-        } else {
-            res.status(400).json({ Error: "NotFound" });
-        }
+export const GetUsersCurrentlyBorrowedBooksOrFail = async (req, res) => {
+    const requester = req.body.user;
+    const user = await UserModel.findOne(req.body.filter).exec();
+    if (user && (user.id === requester.id || requester.role === "admin")) {
+        res.status(200).json(user.borrowed);
     } else {
         res.status(400).json({ Error: "NotFound" });
     }

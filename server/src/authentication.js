@@ -24,8 +24,7 @@ export const RenewAccessToken = (req, res) => {
     res.status(200).json({ token: tokens.token });
 };
 export const AuthenticateLocal = (req, res, next) => {
-    console.log(req.body.email);
-    console.log(req.body.password);
+    
     if (!req.body.email || !req.body.password) {
         return res.status(403).json({ Error: "Not Authorized" });
     }
@@ -57,7 +56,6 @@ export const AuthenticateRefreshToken = (req, res, next) => {
     const {
         cookies,
     } = req;
-    console.log(cookies);
     jwt.verify(cookies.refreshToken, refreshSecretKey, (err, decoded) => {
         if (err) {
             return res.status(403).json(err);
