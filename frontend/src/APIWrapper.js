@@ -92,7 +92,6 @@ export const GetUserData = (accessToken) => {
         });
     })
 }
-
 export const GetAllBooks = async (setBooks) => {
   const req = `${url}/book/all/`;
 

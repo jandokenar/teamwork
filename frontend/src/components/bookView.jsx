@@ -2,34 +2,24 @@ import React, { useState } from 'react';
 import GetAllBooks from "../APIWrapper.js";
 
 const UpdateBookView = (books) => {
-    let output;
-    output = Object.keys(books).map((key, index) =>
+    return (books.map((key, index) =>
         <div>
-            <a href={books[key].isbn}>
-            {
-                `${books[key].author}: ${books[key].title} (${books[key].published.substring(0,4)})`
-            }
+            <a href={key.isbn}>
+                {
+                    `${key.author}: ${key.title} (${key.published.substring(0, 4)})`
+                }
             </a>
-        </div>);
-    return (output);
+        </div>));
 }
 
 const BookView = () => {
-    const [books, setBooks] = useState(null);
-    if (books) {
-        return (
-            <div className="bookListingWrapper">
-                <button onClick={() => GetAllBooks(setBooks)}>Update</button>
-                {UpdateBookView(books)}
-            </div>
-        );
-    } else {
-        return (
-            <div className="bookListingWrapper">
-                <button onClick={() => GetAllBooks(setBooks)}>Update</button>
-            </div>
-        );
-    }
+    const [books, setBooks] = useState([]);
 
+    return (
+        <div className="bookListingWrapper">
+            <button onClick={() => GetAllBooks(setBooks)}>Update</button>
+            {UpdateBookView(books)}
+        </div>
+    );
 }
 export default BookView;
