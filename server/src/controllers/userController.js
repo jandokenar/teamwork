@@ -3,6 +3,24 @@ import UserModel from "../models/userModel.js";
 import BookModel from "../models/bookModel.js";
 import { GetBookByID as GetBookByIsbn } from "./bookController.js";
 
+export const Login = async (req, res) => {
+    const { userID } = req.body;
+    const tokens = CreateTokens(userID);
+    console.log(userID);
+    res.cookie("refreshToken", tokens.refreshToken)
+        .status(200)
+        .json({ token: tokens.token });
+}
+export const Logout = async (req, res) => {
+    res.clearCookie("refreshToken")
+        .status(200)
+        .json({ token: null });
+}
+export const RenewLogin = async (req, res) => {
+    const tokens = CreateTokens(req.body.decoded.userID);
+    res.status(200).json({ token: tokens.token });
+}
+
 export const newUser = async (req, res) => {
     const {
         name, email, role,
