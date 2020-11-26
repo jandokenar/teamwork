@@ -50,8 +50,8 @@ const UserDataBanner = () => {
     }
     return (
         <div>
-          <p> {context.currentUser.name}</p>
-          
+          <p> Name: {context.currentUser.name} </p>
+          <p> Email: {context.currentUser.email} </p>
           <button onClick={(e) => LogoutOnClick(e)}> Log Out </button>
         </div>
     )

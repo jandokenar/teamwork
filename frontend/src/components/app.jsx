@@ -60,7 +60,6 @@ const App = () => {
                               }}>
           <div className="rootWrapper">
             <header className ="loginWrapper">
-              <p className="TOKEN"> {accessToken} </p>
               <UserBanner/>
             </header>
             <PageContainer/>
