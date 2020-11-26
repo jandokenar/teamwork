@@ -7,7 +7,7 @@ import { RenewAccessToken, GetUserData } from "../APIWrapper.js";
 const App = () => {
     
     const [currentUser, SetCurrentUser] = useState({});
-    const [userDataIsDirty, SetUserDataIsDirty] = useState(false);
+    const [userDataIsDirty, SetUserDataIsDirty] = useState(true);
     const [accessToken, SetAccessToken] = useState(localStorage.getItem("accessToken"));
     const [isLoggedIn, SetIsLoggedIn] = useState(accessToken? true : false);
     const [refreshInterval, SetRefreshInterval] = useState(null);
@@ -29,7 +29,7 @@ const App = () => {
         }
         if(userDataIsDirty) UpdateUserData();
     },[userDataIsDirty, accessToken]);
-    
+
     useEffect( () => {
         if(isLoggedIn){
             const tenMinutes = 60 * 1000 * 10;
