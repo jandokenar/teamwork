@@ -8,16 +8,18 @@ export const addBook = async (req, res) => {
     const findBook = await bookModel.findOne({ isbn }).exec();
 
     if (findBook) {
+        console.log("Finded book:", findBook)
         const newCopy = {
             id: findBook.copies[findBook.copies.length - 1].id + 1,
             status: "in_library",
         };
         const updatedCopies = [...findBook.copies, newCopy];
         const updatedBook = await bookModel.updateOne(
-            { title },
+            { isbn },
             { copies: updatedCopies },
             { useFindAndModify: false, new: true },
         ).exec();
+        console.log("Updated:", updatedBook);
         res.status(200).json(updatedBook);
     } else {
         const book = {

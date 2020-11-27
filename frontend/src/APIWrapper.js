@@ -46,7 +46,7 @@ export const Login = (email, password) => {
                 localStorage.setItem("accessToken", res.data.token);
                 resolve();
             } else {
-                localStorage.removeItem("accessToken");
+                localStorage.removeItem("accessToken"); 
                 reject("Wrong email or password");
             }
         }).catch(() => {
@@ -71,7 +71,27 @@ export const Logout = () => {
         });
     })   
 }
-export const Signup = () => {}
+export const SignUp = (name, email, password) => {
+    return new Promise((resolve, reject) => {
+        const options = {
+            method: "post",
+            url: `${url}/user/`,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            data: {
+                name,
+                email,
+                password,
+            },   
+        }
+        axios(options).then((res) => {
+            resolve();
+        }).catch(() => {
+            reject();
+        })       
+    })
+}
 export const GetUserData = (accessToken) => {
     return new Promise((resolve, reject) => {
         const options = {
@@ -84,21 +104,41 @@ export const GetUserData = (accessToken) => {
             },
         };
         axios(options).then((res) => {
-            console.log(res);
             resolve(res.data);
         }).catch((e) => {
-            console.log(e);
+            reject(e);
+        });
+    })
+}
+export const ModifyUserData = (replacementData, accessToken) => {
+    return new Promise((resolve, reject) => {
+        const options = {
+            method: "put",
+            url: `${url}/user/`,
+            credentials: "include",
+            withCredentials: true,
+            headers: {
+                authentication: `Bearer ${accessToken}`,
+                "Content-Type": "application/json",
+            },
+            data: {
+                replacementData,
+            }
+        };
+        axios(options).then((res) => {
+            resolve(res.data);
+        }).catch((e) => {
             reject(e);
         });
     })
 }
 export const GetAllBooks = async (setBooks) => {
-  const req = `${url}/book/all/`;
-
-  const resp = await axios.get(req);
-  if (resp) {
-    setBooks(resp.data);
-  }
+    const req = `${url}/book/all/`;
+    
+    const resp = await axios.get(`${req}`);
+    if (resp) {
+        setBooks(resp.data);
+    }
 }
 
 export const GetBook = async (setBook, isbn) => {
@@ -110,7 +150,7 @@ export const GetBook = async (setBook, isbn) => {
     }
   }
 
-  export const BorrowBook = async (context, isbn, copyId, setBookUpdate) => {
+export const BorrowBook = async (context, isbn, copyId, setBookUpdate) => {
     const options = {
         method: "post",
         url: `${url}/user/borrow/`,
@@ -133,7 +173,7 @@ export const GetBook = async (setBook, isbn) => {
     }
   }
 
-  export const ReturnBook = async (context, isbn, copyId, setBookUpdate) => {
+export const ReturnBook = async (context, isbn, copyId, setBookUpdate) => {
     const options = {
         method: "post",
         url: `${url}/user/return/`,
@@ -156,7 +196,7 @@ export const GetBook = async (setBook, isbn) => {
     }
   }
 
-  export const ReserveBook = async (context, isbn, copyId, setBookUpdate) => {
+export const ReserveBook = async (context, isbn, copyId, setBookUpdate) => {
     const options = {
         method: "put",
         url: `${url}/user/reserve/`,
@@ -178,3 +218,16 @@ export const GetBook = async (setBook, isbn) => {
         setBookUpdate(false);
     }
   }
+export const AddBook = async (bookObject) => {
+    const response = await axios.post(`${url}/book/`, bookObject);
+    return response.data;
+};
+
+export const DeleteOneBook = async (isbn, id) => {
+    const response = await axios.delete(`${url}/book/`, {data:{isbn: isbn, id: id}});
+    return response.data;
+}
+
+export const UpdateOneBook = async (bookObject) => {
+    await axios.put(`${url}/book/`, bookObject);
+}
