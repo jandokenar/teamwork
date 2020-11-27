@@ -110,7 +110,7 @@ export const GetBook = async (setBook, isbn) => {
     }
   }
 
-  export const BorrowBook = async (context, isbn, id, setBookUpdate) => {
+  export const BorrowBook = async (context, isbn, copyId, setBookUpdate) => {
     const options = {
         method: "post",
         url: `${url}/user/borrow/`,
@@ -123,7 +123,7 @@ export const GetBook = async (setBook, isbn) => {
         data: {
             id: context.currentUser.id,
             isbn: isbn,
-            copy: id,
+            copy: copyId,
         },
     };
     
@@ -133,7 +133,7 @@ export const GetBook = async (setBook, isbn) => {
     }
   }
 
-  export const ReturnBook = async (context, isbn, id, setBookUpdate) => {
+  export const ReturnBook = async (context, isbn, copyId, setBookUpdate) => {
     const options = {
         method: "post",
         url: `${url}/user/return/`,
@@ -146,7 +146,7 @@ export const GetBook = async (setBook, isbn) => {
         data: {
             id: context.currentUser.id,
             isbn: isbn,
-            copy: id,
+            copy: copyId,
         },
     };
     
@@ -156,7 +156,7 @@ export const GetBook = async (setBook, isbn) => {
     }
   }
 
-  export const ReserveBook = async (context, isbn, id, setBookUpdate) => {
+  export const ReserveBook = async (context, isbn, copyId, setBookUpdate) => {
     const options = {
         method: "put",
         url: `${url}/user/reserve/`,
@@ -169,7 +169,7 @@ export const GetBook = async (setBook, isbn) => {
         data: {
             id: context.currentUser.id,
             isbn: isbn,
-            copy: id,
+            copy: copyId,
         },
     };
     
