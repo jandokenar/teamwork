@@ -29,8 +29,8 @@ async function MaybeInitializeBookCollection(){
                       }
                   };
             
-
-            addBook(req, undefined); //since res won't be defined this won't work...
+            const res = {status: () => {return {json: () => {}}}};
+            addBook(req, res);
         });
         
     } catch (e) {

@@ -4,7 +4,6 @@ export const addBook = async (req, res) => {
     const {
         isbn, title, author, published, pages, description,
     } = req.body;
-
     const findBook = await bookModel.findOne({ isbn }).exec();
 
     if (findBook) {

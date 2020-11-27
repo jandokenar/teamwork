@@ -19,13 +19,10 @@ const securityAccess = {
 const routeViewBindings = {
     "Search Book" : <p> Tadaa </p>,
     "All Books" : <BookView/>,
-<<<<<<< frontend/src/components/pageContainer.jsx
     "Book" : <Book/>,
-=======
     "Add Book" : <AddNewBook />,
     "My Data":  <UserDataView/>,
     "Delete Book" : <DeleteOrUpdateBook />,
->>>>>>> frontend/src/components/pageContainer.jsx
 };
 
 const PageContainer = () => {
