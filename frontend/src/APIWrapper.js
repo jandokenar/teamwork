@@ -145,3 +145,12 @@ export const AddBook = async (bookObject) => {
     const response = await axios.post(`${url}/book/`, bookObject);
     return response.data;
 };
+
+export const DeleteOneBook = async (isbn, id) => {
+    const response = await axios.delete(`${url}/book/`, {data:{isbn: isbn, id: id}});
+    return response.data;
+}
+
+export const UpdateOneBook = async (bookObject) => {
+    await axios.put(`${url}/book/`, bookObject);
+}
