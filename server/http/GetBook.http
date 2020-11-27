@@ -1,6 +1,1 @@
-GET http://localhost:5000/library/book
-Content-Type: application/json
-
-{
-        "isbn": "0786838655"
-}
+GET http://localhost:5000/library/book/0786838655

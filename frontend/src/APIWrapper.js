@@ -141,6 +141,83 @@ export const GetAllBooks = async (setBooks) => {
     }
 }
 
+export const GetBook = async (setBook, isbn) => {
+    const req = `${url}/book/${isbn}`;
+    
+    const resp = await axios.get(req);
+    if (resp) {
+      setBook(resp.data);
+    }
+  }
+
+export const BorrowBook = async (context, isbn, copyId, setBookUpdate) => {
+    const options = {
+        method: "post",
+        url: `${url}/user/borrow/`,
+        credentials: "include",
+        withCredentials: true,
+        headers: {
+            "Content-Type": "application/json",
+            authentication: `Bearer ${context.accessToken}`,
+        },
+        data: {
+            id: context.currentUser.id,
+            isbn,
+            copy: copyId,
+        },
+    };
+    
+    const resp = await axios(options);
+    if (resp) {
+        setBookUpdate(false);
+    }
+  }
+
+export const ReturnBook = async (context, isbn, copyId, setBookUpdate) => {
+    const options = {
+        method: "post",
+        url: `${url}/user/return/`,
+        credentials: "include",
+        withCredentials: true,
+        headers: {
+            "Content-Type": "application/json",
+            authentication: `Bearer ${context.accessToken}`,
+        },
+        data: {
+            id: context.currentUser.id,
+            isbn,
+            copy: copyId,
+        },
+    };
+    
+    const resp = await axios(options);
+    if (resp) {
+        setBookUpdate(false);
+    }
+  }
+
+export const ReserveBook = async (context, isbn, copyId, setBookUpdate) => {
+    const options = {
+        method: "put",
+        url: `${url}/user/reserve/`,
+        credentials: "include",
+        withCredentials: true,
+        headers: {
+            "Content-Type": "application/json",
+            authentication: `Bearer ${context.accessToken}`,
+        },
+        data: {
+            id: context.currentUser.id,
+            isbn,
+            copy: copyId,
+        },
+    };
+    
+    const resp = await axios(options);
+    if (resp) {
+        setBookUpdate(false);
+    }
+  }
 export const AddBook = async (bookObject) => {
     const response = await axios.post(`${url}/book/`, bookObject);
     return response.data;

@@ -1,6 +1,7 @@
 import React, { useContext }from "react"
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import BookView from "./bookView.jsx"
+import Book from "./book.jsx"
 import AddNewBook from "./addNewBook";
 import UserDataView from "./userDataView.jsx";
 import UserContext from "./userContext.js";
@@ -18,9 +19,13 @@ const securityAccess = {
 const routeViewBindings = {
     "Search Book" : <p> Tadaa </p>,
     "All Books" : <BookView/>,
+<<<<<<< frontend/src/components/pageContainer.jsx
+    "Book" : <Book/>,
+=======
     "Add Book" : <AddNewBook />,
     "My Data":  <UserDataView/>,
     "Delete Book" : <DeleteOrUpdateBook />,
+>>>>>>> frontend/src/components/pageContainer.jsx
 };
 
 const PageContainer = () => {
