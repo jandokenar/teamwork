@@ -58,7 +58,7 @@ const App = () => {
                                   SetIsLoggedIn,
                                   isLoggedIn,
                                   SetAccessToken,
-                                  
+                                  accessToken,
                               }}>
           <div className="rootWrapper">
             <header className ="loginWrapper">
