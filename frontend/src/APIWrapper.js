@@ -95,8 +95,86 @@ export const GetUserData = (accessToken) => {
 export const GetAllBooks = async (setBooks) => {
   const req = `${url}/book/all/`;
 
-  const resp = await axios.get(`${req}`);
+  const resp = await axios.get(req);
   if (resp) {
     setBooks(resp.data);
   }
 }
+
+export const GetBook = async (setBook, isbn) => {
+    const req = `${url}/book/${isbn}`;
+    
+    const resp = await axios.get(req);
+    if (resp) {
+      setBook(resp.data);
+    }
+  }
+
+  export const BorrowBook = async (context, isbn, id, setBookUpdate) => {
+    const options = {
+        method: "post",
+        url: `${url}/user/borrow/`,
+        credentials: "include",
+        withCredentials: true,
+        headers: {
+            "Content-Type": "application/json",
+            authentication: `Bearer ${context.accessToken}`,
+        },
+        data: {
+            id: context.currentUser.id,
+            isbn: isbn,
+            copy: id,
+        },
+    };
+    
+    const resp = await axios(options);
+    if (resp) {
+        setBookUpdate(false);
+    }
+  }
+
+  export const ReturnBook = async (context, isbn, id, setBookUpdate) => {
+    const options = {
+        method: "post",
+        url: `${url}/user/return/`,
+        credentials: "include",
+        withCredentials: true,
+        headers: {
+            "Content-Type": "application/json",
+            authentication: `Bearer ${context.accessToken}`,
+        },
+        data: {
+            id: context.currentUser.id,
+            isbn: isbn,
+            copy: id,
+        },
+    };
+    
+    const resp = await axios(options);
+    if (resp) {
+        setBookUpdate(false);
+    }
+  }
+
+  export const ReserveBook = async (context, isbn, id, setBookUpdate) => {
+    const options = {
+        method: "put",
+        url: `${url}/user/reserve/`,
+        credentials: "include",
+        withCredentials: true,
+        headers: {
+            "Content-Type": "application/json",
+            authentication: `Bearer ${context.accessToken}`,
+        },
+        data: {
+            id: context.currentUser.id,
+            isbn: isbn,
+            copy: id,
+        },
+    };
+    
+    const resp = await axios(options);
+    if (resp) {
+        setBookUpdate(false);
+    }
+  }

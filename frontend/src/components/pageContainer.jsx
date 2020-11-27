@@ -1,6 +1,7 @@
 import React from "react"
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import BookView from "./bookView.jsx"
+import Book from "./book.jsx"
 
 import "../css/styleSheet.css";
 
@@ -11,7 +12,7 @@ import "../css/styleSheet.css";
 const routeViewBindings = {
     "Search Book" : <p> Tadaa </p>,
     "All Books" : <BookView/>,
-    "C" : <p> C </p>,
+    "Book" : <Book/>,
 };
 
 const PageContainer = () => {

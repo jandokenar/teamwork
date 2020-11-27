@@ -1,25 +1,28 @@
 import React, { useState } from 'react';
-import GetAllBooks from "../APIWrapper.js";
+import { GetAllBooks } from "../APIWrapper.js";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import "../css/styleSheet.css";
-
-const UpdateBookView = (books) => {
-    return (books.map((key, index) =>
-        <div>
-            <a href={key.isbn}>
-                {
-                    `${key.author}: ${key.title} (${key.published.substring(0, 4)})`
-                }
-            </a>
-        </div>));
-}
 
 const BookView = () => {
     const [books, setBooks] = useState([]);
 
+    const UpdateBookView = () => {
+        return (books.map((key, index) =>
+            <div key={index}>
+                <Link key={index} to={"book?isbn=" + key.isbn}>
+                    {
+                        `${key.author}: ${key.title} (${key.published.substring(0, 4)})`
+                    }
+    
+                </Link>
+            </div>
+        ));
+    }
+
     return (
         <div className="bookListingWrapper">
             <button onClick={() => GetAllBooks(setBooks)}>Update</button>
-            {UpdateBookView(books)}
+            {UpdateBookView()}
         </div>
     );
 }

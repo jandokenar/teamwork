@@ -10,9 +10,9 @@ import {
 const bookRouter = express.Router();
 
 bookRouter.post("/", addBook);
-bookRouter.get("/", getBook);
 bookRouter.put("/", updateBook);
 bookRouter.get("/all/", getBooks);
+bookRouter.get("/:isbn/", getBook);
 bookRouter.delete("/", deleteBook);
 
 /*

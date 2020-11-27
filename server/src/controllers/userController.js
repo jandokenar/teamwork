@@ -3,9 +3,9 @@ import UserModel from "../models/userModel.js";
 import BookModel from "../models/bookModel.js";
 import { GetBookByID as GetBookByIsbn } from "./bookController.js";
 import { CreateTokens } from "../authentication.js";
-//@NOTE
-//Authentication middleware adds user to request. (req.body.user)
-//If authentication fails, middleware return early and the specified endpoint is not reached. So the passed in user is always valid. BUT middleware doesn't check user role.
+// @NOTE
+// Authentication middleware adds user to request. (req.body.user)
+// If authentication fails, middleware return early and the specified endpoint is not reached. So the passed in user is always valid. BUT middleware doesn't check user role.
 
 /*
 //Deprecated user login
@@ -27,16 +27,16 @@ export const Login = async (req, res) => {
     res.cookie("refreshToken", tokens.refreshToken)
         .status(200)
         .json({ token: tokens.token });
-}
+};
 export const Logout = async (req, res) => {
     res.clearCookie("refreshToken")
         .status(200)
         .json({ token: null });
-}
+};
 export const RenewLogin = async (req, res) => {
     const tokens = CreateTokens(req.body.decoded.userID);
     res.status(200).json({ token: tokens.token });
-}
+};
 export const CreateNewUser = async (req, res) => {
     const {
         name, email, role,
@@ -68,7 +68,7 @@ export const CreateNewUser = async (req, res) => {
 };
 export const GetUserOrFail = async (req, res) => {
     const requester = req.body.user;
-   
+
     const user = await UserModel.findOne(req.body.filter).exec();
     // Only allow normal users to seach themselves.
     if (user && (user.id === requester.id || requester.role === "admin")) {
@@ -76,7 +76,7 @@ export const GetUserOrFail = async (req, res) => {
     } else {
         res.status(400).json({ Error: "NotFound" });
     }
-}
+};
 export const GetAllUsersOrFail = async (req, res) => {
     const requester = req.body.user;
     if (requester.role === "admin") {
@@ -89,7 +89,7 @@ export const GetAllUsersOrFail = async (req, res) => {
     } else {
         res.status(400).json({ Error: "NotFound" });
     }
-}
+};
 export const DeleteUserOrFail = async (req, res) => {
     const requester = req.body.user;
     if (!requester.borrowed.length) {
@@ -111,16 +111,15 @@ export const DeleteUserOrFail = async (req, res) => {
     } else {
         res.status(400).json({ Error: "NotFound" });
     }
-}
+};
 export const ModifyUserOrFail = async (req, res) => {
     const requester = req.body.user;
     const { id } = req.body.replacementData;
     const account = (id && id !== requester.id) ?
-          await UserModel.findOne(id).exec() :
-          requester;
+        await UserModel.findOne(id).exec() :
+        requester;
     if (account === requester ||
         requester.role === "admin") {
-
         const rd = req.body.replacementData;
 
         const name = rd.name ? rd.name : account.name;
@@ -138,7 +137,7 @@ export const ModifyUserOrFail = async (req, res) => {
     } else {
         res.status(400).json({ Error: "NotFound" });
     }
-}
+};
 export const UserBorrowBook = async (req, res) => {
     const weeks = 12096e5; // 2 week loan in ms
     const account = req.body.user;
@@ -153,11 +152,14 @@ export const UserBorrowBook = async (req, res) => {
 
     const updatedCopies = bookCopies.map((element) => {
         if (element.id === coopyId && element.status === "in_library" &&
-            (element.reserveList.length === 0 || element.reserveList[0] === req.body.id)) {
+            (element.reserveList.length === 0 ||
+            element.reserveList[0].reserveId === req.body.id)) {
             const copiesMap = element;
-            if (copiesMap.reserveList[0] === req.body.id) {
-                copiesMap.reserveList =
+            if (copiesMap.reserveList.length > 0) {
+                if (copiesMap.reserveList[0].reserveId === req.body.id) {
+                    copiesMap.reserveList =
                     copiesMap.reserveList.slice(1, copiesMap.length);
+                }
             }
             bookAvailable = true;
             copiesMap.status = "borrowed";
@@ -194,7 +196,7 @@ export const UserBorrowBook = async (req, res) => {
     }
 };
 export const ReserveBookForUserOrFail = async (req, res) => {
-    const user = req.body.user;
+    const { user } = req.body;
 
     const { isbn } = req.body;
     const book = await GetBookByIsbn(isbn);
@@ -222,7 +224,7 @@ export const ReserveBookForUserOrFail = async (req, res) => {
     } else {
         res.status(400).json({ Error: "BookNotFound" });
     }
-}
+};
 
 export const UserReturnBook = async (req, res) => {
     const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
@@ -230,7 +232,7 @@ export const UserReturnBook = async (req, res) => {
     const thisDay = new Date();
 
     const account = req.body.user;
-    
+
     const bookIsbn = req.body.isbn;
     const book = await GetBookByIsbn(bookIsbn);
     const coopyId = parseInt(req.body.copy, 10);
@@ -269,7 +271,6 @@ export const UserReturnBook = async (req, res) => {
     } else {
         res.status(404).end("loan not found");
     }
-
 };
 export const GetUsersCurrentlyBorrowedBooksOrFail = async (req, res) => {
     const requester = req.body.user;
@@ -279,4 +280,4 @@ export const GetUsersCurrentlyBorrowedBooksOrFail = async (req, res) => {
     } else {
         res.status(400).json({ Error: "NotFound" });
     }
-}
+};

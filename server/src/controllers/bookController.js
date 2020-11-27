@@ -74,7 +74,7 @@ export async function GetBookByID(isbn) {
 }
 
 export async function getBook(req, res) {
-    const { isbn } = req.body;
+    const { isbn } = { isbn: req.params.isbn };
     const book = await GetBookByID(isbn);
     if (book) {
         res.status(200).json(book);
