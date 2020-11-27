@@ -13,7 +13,8 @@ const DeleteBook = () => {
 
     const HandleDeleteBook = (isbn, id) => {
         DeleteOneBook(isbn, id)
-        .then(response => {
+            .then(response => {
+                console.log(response);
             GetAllBooks(setBooks);
             if (typeof response === "object") {
                 setOneBook(response);
