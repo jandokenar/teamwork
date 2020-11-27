@@ -122,16 +122,13 @@ export const ModifyUserOrFail = async (req, res) => {
         requester.role === "admin") {
 
         const rd = req.body.replacementData;
-
-        const name = rd.name ? rd.name : account.name;
-        const password = rd.password ? rd.password : account.password;
-        const email = rd.email ? rd.email : account.email;
+        if(rd.password !== undefined){
+            rd.password =  bcrypt.hashSync(rd.password, 10);
+        }
 
         const updatedAccount = await UserModel.findOneAndUpdate(
-            { id: account.id },
-            {
-                ...account, name, password, email,
-            },
+            { "id": account.id },
+            rd,
             { useFindAndModify: false, new: true },
         ).exec();
         res.status(200).json(updatedAccount);

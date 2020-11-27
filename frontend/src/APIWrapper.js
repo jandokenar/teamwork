@@ -110,6 +110,28 @@ export const GetUserData = (accessToken) => {
         });
     })
 }
+export const ModifyUserData = (replacementData, accessToken) => {
+    return new Promise((resolve, reject) => {
+        const options = {
+            method: "put",
+            url: `${url}/user/`,
+            credentials: "include",
+            withCredentials: true,
+            headers: {
+                authentication: `Bearer ${accessToken}`,
+                "Content-Type": "application/json",
+            },
+            data: {
+                replacementData,
+            }
+        };
+        axios(options).then((res) => {
+            resolve(res.data);
+        }).catch((e) => {
+            reject(e);
+        });
+    })
+}
 export const GetAllBooks = async (setBooks) => {
     const req = `${url}/book/all/`;
     
