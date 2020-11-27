@@ -24,7 +24,6 @@ export const RenewAccessToken = (req, res) => {
     res.status(200).json({ token: tokens.token });
 };
 export const AuthenticateLocal = (req, res, next) => {
-    
     if (!req.body.email || !req.body.password) {
         return res.status(403).json({ Error: "Not Authorized" });
     }

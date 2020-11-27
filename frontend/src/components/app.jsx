@@ -12,6 +12,7 @@ const App = () => {
     const [isLoggedIn, SetIsLoggedIn] = useState(accessToken? true : false);
     const [refreshInterval, SetRefreshInterval] = useState(null);
     const ClearState = () => {
+        console.log("Clearing state");
         SetCurrentUser({});
         SetIsLoggedIn(false);
         SetAccessToken(null);
@@ -23,7 +24,8 @@ const App = () => {
             GetUserData(accessToken).then((user) => {
                 SetUserDataIsDirty(false);
                 SetCurrentUser(user);
-            }).catch(() => {
+            }).catch((err) => {
+                console.log(err);
                 ClearState();            
             });
         }
