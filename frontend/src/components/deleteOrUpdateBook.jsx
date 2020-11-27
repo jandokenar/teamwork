@@ -15,7 +15,11 @@ const DeleteBook = () => {
         DeleteOneBook(isbn, id)
         .then(response => {
             GetAllBooks(setBooks);
-            setOneBook(response);
+            if (typeof response === "object") {
+                setOneBook(response);
+            } else {
+                setOneBook(null);
+            }
         })
     }
 
