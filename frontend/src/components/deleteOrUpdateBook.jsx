@@ -1,6 +1,5 @@
-import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import { GetAllBooks } from "../APIWrapper";
+import { GetAllBooks, DeleteOneBook, UpdateOneBook } from "../APIWrapper";
 
 const DeleteBook = () => {
     const [books, setBooks] = useState([]);
@@ -13,10 +12,10 @@ const DeleteBook = () => {
     }, []);
 
     const HandleDeleteBook = (isbn, id) => {
-        axios.delete("http://localhost:5000/library/book", {data:{isbn: isbn, id: id}})
+        DeleteOneBook(isbn, id)
         .then(response => {
             GetAllBooks(setBooks);
-            setOneBook(response.data);
+            setOneBook(response);
         })
     }
 
@@ -27,7 +26,7 @@ const DeleteBook = () => {
     }
 
     const HandleUpdateBook = () => {
-        axios.put("http://localhost:5000/library/book", oneBook)
+        UpdateOneBook(oneBook)
         .then(response => {
             setUpdateBook(false);
         })
