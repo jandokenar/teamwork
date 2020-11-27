@@ -18,7 +18,7 @@ const Book = () => {
 
     const context = useContext(UserContext);
 
-    const IsBookAvailable = (bookCopy) => {
+    const ShowBookCopyActions = (bookCopy) => {
         if (bookCopy.status === "in_library" && (bookCopy.reserveList.length < 1 ||
             bookCopy.reserveList[0].reserveId === context.currentUser.id))  {
             return (<button onClick={() => BorrowBook(context, isbn, bookCopy.id, setBookUpdate)}>Borrow</button>);
@@ -38,7 +38,7 @@ const Book = () => {
         return (book.copies.map((key, index) =>
             <div key={index}>
                 {`${key.id}. (${key.status})`}&nbsp;&nbsp;
-                {IsBookAvailable(key)}
+                {ShowBookCopyActions(key)}
             </div>
         ));
     }

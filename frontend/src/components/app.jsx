@@ -56,7 +56,7 @@ const App = () => {
                                   SetIsLoggedIn,
                                   isLoggedIn,
                                   SetAccessToken,
-                                  accessToken: accessToken,
+                                  accessToken,
                                   
                               }}>
           <div className="rootWrapper">

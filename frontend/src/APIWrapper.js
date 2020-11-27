@@ -122,7 +122,7 @@ export const GetBook = async (setBook, isbn) => {
         },
         data: {
             id: context.currentUser.id,
-            isbn: isbn,
+            isbn,
             copy: copyId,
         },
     };
@@ -145,7 +145,7 @@ export const GetBook = async (setBook, isbn) => {
         },
         data: {
             id: context.currentUser.id,
-            isbn: isbn,
+            isbn,
             copy: copyId,
         },
     };
@@ -168,7 +168,7 @@ export const GetBook = async (setBook, isbn) => {
         },
         data: {
             id: context.currentUser.id,
-            isbn: isbn,
+            isbn,
             copy: copyId,
         },
     };
