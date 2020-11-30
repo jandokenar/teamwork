@@ -92,6 +92,7 @@ export const SignUp = (name, email, password) => {
         })       
     })
 }
+
 export const GetUserData = (accessToken) => {
     return new Promise((resolve, reject) => {
         const options = {
@@ -110,6 +111,12 @@ export const GetUserData = (accessToken) => {
         });
     })
 }
+
+export const GetAllUsers = () => {
+    const request = axios.get(`${url}/user/all`)
+    return request.then(response => response.data)
+}
+
 export const ModifyUserData = (replacementData, accessToken) => {
     return new Promise((resolve, reject) => {
         const options = {
@@ -132,6 +139,12 @@ export const ModifyUserData = (replacementData, accessToken) => {
         });
     })
 }
+
+export const DeleteOneUser = async (id) => {
+    const response = await axios.delete(`${url}/user/`, { data: { id: id } });
+    return response.data;
+}
+
 export const GetAllBooks = async (setBooks) => {
     const req = `${url}/book/all/`;
     

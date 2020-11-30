@@ -7,7 +7,6 @@ export const addBook = async (req, res) => {
     const findBook = await bookModel.findOne({ isbn }).exec();
 
     if (findBook) {
-        console.log("Finded book:", findBook)
         const newCopy = {
             id: findBook.copies[findBook.copies.length - 1].id + 1,
             status: "in_library",

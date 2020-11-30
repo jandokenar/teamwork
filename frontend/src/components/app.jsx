@@ -25,7 +25,6 @@ const App = () => {
                 SetUserDataIsDirty(false);
                 SetCurrentUser(user);
             }).catch((err) => {
-                console.log(err);
                 ClearState();            
             });
         }
