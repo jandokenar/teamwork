@@ -14,7 +14,7 @@ const Book = () => {
     const [book, setBook] = useState(null);
     const [bookUpdate, setBookUpdate] = useState(false);
     const isbn = GetQuery().get("isbn");
-
+    
     const context = useContext(UserContext);
 
     const ShowBookCopyActions = (bookCopy) => {
@@ -22,12 +22,18 @@ const Book = () => {
         if (context.currentUser.id) {
             if (bookCopy.status === "in_library" && (bookCopy.reserveList.length < 1 ||
                 bookCopy.reserveList[0].reserveId === context.currentUser.id)) {
-                return (<button onClick={() => BorrowBook(context, isbn, bookCopy.id, setBookUpdate)}>Borrow</button>);
+                return (<button onClick={() =>
+                                         BorrowBook(context, isbn, bookCopy.id, setBookUpdate)
+                                         .then(() => {context.SetUserDataIsDirty(true)})}>
+                        Borrow</button>);
             } else if (bookCopy.due && bookCopy.borrower === context.currentUser.id) {
                 return (
                     <label>
-                        <b>Due Date:&nbsp;&nbsp;</b>{bookCopy.due.substring(0, 10)}&nbsp;&nbsp;
-                        <button onClick={() => ReturnBook(context, isbn, bookCopy.id, setBookUpdate)}>Return</button>
+                      <b>Due Date:&nbsp;&nbsp;</b>{bookCopy.due.substring(0, 10)}&nbsp;&nbsp;
+                      <button onClick={() =>
+                                       ReturnBook(context, isbn, bookCopy.id, setBookUpdate)
+                                       .then(() => {context.SetUserDataIsDirty(true)})}>
+                                       Return</button>
                     </label>
                 );
             } else if (!bookCopy.reserveList.find(element => element.reserveId === context.currentUser.id) ||
