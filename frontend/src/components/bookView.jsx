@@ -6,23 +6,28 @@ import "../css/styleSheet.css";
 
 const BookView = () => {
     const [books, setBooks] = useState([]);
+    const [booksUpdate, setBookUpdate] = useState(false);
 
     const UpdateBookView = () => {
-        return (books.map((key, index) =>
-            <div key={index}>
-                <Link key={index} to={"book?isbn=" + key.isbn}>
-                    {
-                        `${key.author}: ${key.title} (${key.published.substring(0, 4)})`
-                    }
-    
-                </Link>
-            </div>
-        ));
+        if (booksUpdate) {
+            return (books.map((key, index) =>
+                <div key={index}>
+                    <Link key={index} to={"book?isbn=" + key.isbn}>
+                        {
+                            `${key.author}: ${key.title} (${key.published.substring(0, 4)})`
+                        }
+                    </Link>
+                </div>
+            ));
+        } else {
+            setBookUpdate(true);
+            GetAllBooks(setBooks);
+        }
     }
+
 
     return (
         <div className="bookListingWrapper">
-            <button onClick={() => GetAllBooks(setBooks)}>Update</button>
             {UpdateBookView()}
         </div>
     );

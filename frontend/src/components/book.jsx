@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-//import { BrowserRouter as Router, Route, Link, useParams} from "react-router-dom";
 import { GetBook, BorrowBook, ReturnBook, ReserveBook } from "../APIWrapper.js";
 import UserContext from "./userContext.js";
 import "../css/styleSheet.css";
@@ -19,18 +18,22 @@ const Book = () => {
     const context = useContext(UserContext);
 
     const ShowBookCopyActions = (bookCopy) => {
-        if (bookCopy.status === "in_library" && (bookCopy.reserveList.length < 1 ||
-            bookCopy.reserveList[0].reserveId === context.currentUser.id))  {
-            return (<button onClick={() => BorrowBook(context, isbn, bookCopy.id, setBookUpdate)}>Borrow</button>);
-        } else if (bookCopy.due && bookCopy.borrower === context.currentUser.id) {
-            return (
-                <label>
-                    <b>Due Date:&nbsp;&nbsp;</b>{bookCopy.due.substring(0,10)}&nbsp;&nbsp;
-                    <button onClick={() => ReturnBook(context, isbn, bookCopy.id, setBookUpdate)}>Return</button>
-                </label>
-            );
-        } else if(bookCopy.reserveList.find(element => element.reserveId !== context.currentUser.id)) {
-            return (<button onClick={() => ReserveBook(context, isbn, bookCopy.id, setBookUpdate)}>Reserve</button>);
+
+        if (context.currentUser.id) {
+            if (bookCopy.status === "in_library" && (bookCopy.reserveList.length < 1 ||
+                bookCopy.reserveList[0].reserveId === context.currentUser.id)) {
+                return (<button onClick={() => BorrowBook(context, isbn, bookCopy.id, setBookUpdate)}>Borrow</button>);
+            } else if (bookCopy.due && bookCopy.borrower === context.currentUser.id) {
+                return (
+                    <label>
+                        <b>Due Date:&nbsp;&nbsp;</b>{bookCopy.due.substring(0, 10)}&nbsp;&nbsp;
+                        <button onClick={() => ReturnBook(context, isbn, bookCopy.id, setBookUpdate)}>Return</button>
+                    </label>
+                );
+            } else if (!bookCopy.reserveList.find(element => element.reserveId === context.currentUser.id) ||
+                bookCopy.reserveList.length < 1) {
+                return (<button onClick={() => ReserveBook(context, isbn, bookCopy.id, setBookUpdate)}>Reserve</button>);
+            }
         }
     }
 
@@ -44,7 +47,7 @@ const Book = () => {
     }
 
     const GetBookByIsbn = () => {
-        if (bookUpdate && book) {
+        if (bookUpdate && book && isbn) {
             return (
                 <div>
                     <div>
