@@ -1,14 +1,23 @@
 import React, { useContext, useState, useEffect } from "react";
 import UserContext from "./userContext.js";
 import { ModifyUserData } from "../APIWrapper.js";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
+const BookLink = (props) => {
+    const {book} = props;
+    return ( 
+        <Link key={book.id} to={"book?isbn=" + book.isbn}>
+        <p> {`${book.isbn}`} </p>
+        </Link>
+    )   
+}
 const BorrowedBooksContainer = () => {
     const context = useContext(UserContext);
     return (
         <div>
           {context.currentUser.borrowed &&
               context.currentUser.borrowed.map(it => (
-                  <p> Book : {it.isbn} </p>
+                  <BookLink book={it}/>
               ))}
         </div>
     );
@@ -19,7 +28,7 @@ const BorrowHistoryContainer = () => {
         <div>
           {context.currentUser.borrowHistory &&
               context.currentUser.borrowHistory.map(it => (
-                  <p> Book : it.isbn </p>
+                  <BookLink book={it}/>
               ))}
         </div>
     );
