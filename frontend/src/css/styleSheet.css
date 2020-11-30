@@ -1,50 +1,51 @@
+:root{
+    --mainColor: gray;
+    --itemColor: coral;
+    --mainBorder: dashed 3px black;
+}
+
 .rootWrapper {
     padding: 5px;
-    border: dashed 5px black;
+    background-color: var(--mainColor);
+    border: var(--mainBorder);
 }
 .loginWrapper {
-    border: dashed 5px yellow;
+    padding: 5px;
+    border: var(--mainBorder);
 }
 .footerWrapper {
-    border: dashed 5px pink;
+    border: var(--mainBorder);
 }
 .pageWrapper {
     padding: 5px;
-    border: dashed 5px black;
     display: grid;
     grid-template-columns: 1fr 3fr;
     grid-template-areas:
     "navBar pageView "
 }
 .navBarWrapper {
-    border: dashed 5px red;
+    border: var(--mainBorder);
     grid-area: navBar;
 }
 .navBarButton {
+    border: none;
+    background-color: var(--itemColor);
     margin: 2px 0px;
     width: 100%;
-    font-size: 16px;
+    font-size: 20px;
 }
 .pageViewWrapper {
-    border: dashed 5px blue;
+    border: var(--mainBorder);
     grid-area: pageView
 }
-
 .bookListingWrapper {
-
+    padding: 5px;
 }
 .bookWrapper {
 
 }
-
 .userListingWrapepr {
 
 }
 .userWrapper {
-
-    
-}
-.TOKEN {
-    color: red;
-    font-size: 12px;
 }
