@@ -5,7 +5,8 @@ import { GetBookByID as GetBookByIsbn } from "./bookController.js";
 import { CreateTokens } from "../authentication.js";
 // @NOTE
 // Authentication middleware adds user to request. (req.body.user)
-// If authentication fails, middleware return early and the specified endpoint is not reached. So the passed in user is always valid. BUT middleware doesn't check user role.
+// If authentication fails, middleware return early and the specified endpoint is not reached.
+// So the passed in user is always valid. BUT middleware doesn't check user role.
 
 /*
 //Deprecated user login
@@ -57,7 +58,7 @@ export const CreateNewUser = async (req, res) => {
     const field = ["_id"];
     user.id = userData[field].toString();
     userData.id = user.id;
-    
+
     await userData.save();
     if (userData) {
         res.status(200).json(user);
@@ -68,8 +69,8 @@ export const CreateNewUser = async (req, res) => {
 export const GetUserOrFail = async (req, res) => {
     const requester = req.body.user;
 
-    const user = (req.body.filter)? await UserModel.findOne(req.body.filter).exec():
-          requester;
+    const user = (req.body.filter) ? await UserModel.findOne(req.body.filter).exec() :
+        requester;
     // Only allow normal users to seach themselves.
     if (user && (user.id === requester.id || requester.role === "admin")) {
         res.status(200).json(user);
@@ -78,36 +79,25 @@ export const GetUserOrFail = async (req, res) => {
     }
 };
 export const GetAllUsersOrFail = async (req, res) => {
-    const requester = req.body.user;
-    if (requester.role === "admin") {
-        const allUsers = await UserModel.find().exec();
-        if (allUsers) {
-            res.status(200).json(allUsers);
-        } else {
-            res.status(400).json({ Error: "NotFound" });
-        }
+    const allUsers = await UserModel.find().exec();
+    if (allUsers) {
+        res.status(200).json(allUsers);
     } else {
         res.status(400).json({ Error: "NotFound" });
     }
 };
 export const DeleteUserOrFail = async (req, res) => {
-    const requester = req.body.user;
-    if (!requester.borrowed.length) {
-        const {
-            id,
-        } = req.body;
-        const filter = {
-            id,
-        };
-        const user = await UserModel.findOneAndRemove(
-            filter,
-            { useFindAndModify: false },
-        );
-        if (user) {
-            res.status(200).json(user);
-        } else {
-            res.status(400).json({ Error: "NotFound" });
-        }
+    const {
+        id,
+    } = req.body;
+
+    const user = await UserModel.findOneAndDelete(
+        { id },
+        { useFindAndModify: false },
+    );
+
+    if (user) {
+        res.status(200).json(user);
     } else {
         res.status(400).json({ Error: "NotFound" });
     }
@@ -121,12 +111,12 @@ export const ModifyUserOrFail = async (req, res) => {
     if (account === requester ||
         requester.role === "admin") {
         const rd = req.body.replacementData;
-        if(rd.password !== undefined){
-            rd.password =  bcrypt.hashSync(rd.password, 10);
+        if (rd.password !== undefined) {
+            rd.password = bcrypt.hashSync(rd.password, 10);
         }
 
         const updatedAccount = await UserModel.findOneAndUpdate(
-            { "id": account.id },
+            { id: account.id },
             rd,
             { useFindAndModify: false, new: true },
         ).exec();

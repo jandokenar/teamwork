@@ -51,8 +51,6 @@ userRouter.put("/",
 userRouter.put("/reserve/",
                AuthenticateAccessToken,
                ReserveBookForUserOrFail);
-userRouter.delete("/",
-                  AuthenticateAccessToken,
-                  DeleteUserOrFail);
+userRouter.delete("/", DeleteUserOrFail);
 
 export default userRouter;

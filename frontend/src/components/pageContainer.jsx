@@ -7,6 +7,7 @@ import UserDataView from "./userDataView.jsx";
 import UserContext from "./userContext.js";
 import "../css/styleSheet.css";
 import DeleteOrUpdateBook from "./deleteOrUpdateBook.jsx";
+import DeleteUser from "./deleteUser";
 
 //@NOTE
 //Add new page here, Key is the text that is displayed on the nav button
@@ -23,6 +24,7 @@ const routeViewBindings = {
     "Add Book" : <AddNewBook />,
     "My Data":  <UserDataView/>,
     "Delete Book" : <DeleteOrUpdateBook />,
+    "Delete User" : <DeleteUser />,
 };
 
 const PageContainer = () => {
