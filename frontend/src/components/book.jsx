@@ -14,7 +14,7 @@ const Book = () => {
     const [book, setBook] = useState(null);
     const [bookUpdate, setBookUpdate] = useState(false);
     const isbn = GetQuery().get("isbn");
-    
+
     const context = useContext(UserContext);
 
     const ShowBookCopyActions = (bookCopy) => {
@@ -23,17 +23,17 @@ const Book = () => {
             if (bookCopy.status === "in_library" && (bookCopy.reserveList.length < 1 ||
                 bookCopy.reserveList[0].reserveId === context.currentUser.id)) {
                 return (<button onClick={() =>
-                                         BorrowBook(context, isbn, bookCopy.id, setBookUpdate)
-                                         .then(() => {context.SetUserDataIsDirty(true)})}>
-                        Borrow</button>);
+                    BorrowBook(context, isbn, bookCopy.id, setBookUpdate)
+                        .then(() => { context.SetUserDataIsDirty(true) })}>
+                    Borrow</button>);
             } else if (bookCopy.due && bookCopy.borrower === context.currentUser.id) {
                 return (
                     <label>
-                      <b>Due Date:&nbsp;&nbsp;</b>{bookCopy.due.substring(0, 10)}&nbsp;&nbsp;
-                      <button onClick={() =>
-                                       ReturnBook(context, isbn, bookCopy.id, setBookUpdate)
-                                       .then(() => {context.SetUserDataIsDirty(true)})}>
-                                       Return</button>
+                        <b>Due Date:&nbsp;&nbsp;</b>{bookCopy.due.substring(0, 10)}&nbsp;&nbsp;
+                        <button onClick={() =>
+                            ReturnBook(context, isbn, bookCopy.id, setBookUpdate)
+                                .then(() => { context.SetUserDataIsDirty(true) })}>
+                            Return</button>
                     </label>
                 );
             } else if (!bookCopy.reserveList.find(element => element.reserveId === context.currentUser.id) ||
@@ -43,11 +43,32 @@ const Book = () => {
         }
     }
 
+    const ShowReservations = (reserveList) => {
+
+        const userReservation = reserveList.find(element => element.reserveId === context.currentUser.id);
+        if (userReservation) {
+            return (
+                <label>
+                    <b>Reservations: </b> {
+                        `${reserveList.indexOf(userReservation) + 1}/${reserveList.length}
+                     is for you.`}
+                </label>
+            );
+        } else if (reserveList.length > 0) {
+            return (
+                <label>
+                    <b>Reservations: </b>{reserveList.length}
+                </label>
+            );
+        }
+    }
+
     const MapCopies = () => {
         return (book.copies.map((key, index) =>
             <div key={index}>
                 {`${key.id}. (${key.status})`}&nbsp;&nbsp;
                 {ShowBookCopyActions(key)}
+                &nbsp;&nbsp;{ShowReservations(key.reserveList)}
             </div>
         ));
     }
