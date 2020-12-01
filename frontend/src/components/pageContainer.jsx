@@ -25,7 +25,8 @@ const routeViewBindings = {
         view: <BookView/>,
     },
     "Book" : {
-        minSecAccess: securityAccess.hiddenForAll,
+        hidden: true,
+        minSecAccess: securityAccess.customer,
         view: <Book/>,
     },
     "Add Book" : {
@@ -60,7 +61,7 @@ const PageContainer = () => {
                          (securityAccess[context.currentUser.role] >= 
                           routeViewBindings[it].minSecAccess));
                                                   
-                  if(!viewable) return ("");
+                  if(!viewable || routeViewBindings[it].hidden) return ("");
                   return (
                       <Link key={it} to={it.replace(" ", "")}>
                         <button className="navBarButton" >
@@ -72,12 +73,19 @@ const PageContainer = () => {
         </div>
             <div className="pageViewWrapper">
             {Object.keys(routeViewBindings).map((it) => {
+                const viewable = routeViewBindings[it].offlineView ||
+                      ((context.currentUser.email !== undefined) && 
+                       (securityAccess[context.currentUser.role] >= 
+                        routeViewBindings[it].minSecAccess));
+                
                 const path = it.replace(" ", "");
+                
                 return (
                     <Route exact key={it} path={`/${path}`}>
-                      {routeViewBindings[it].view}
-                    </Route>
-                )})}
+                      {viewable && routeViewBindings[it].view }
+                    </Route>   
+                )
+            })}
             </div>
             </Router>
         </div>
