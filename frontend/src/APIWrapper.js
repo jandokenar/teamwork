@@ -71,7 +71,7 @@ export const Logout = () => {
         });
     })   
 }
-export const SignUp = (name, email, password) => {
+export const SignUp = (name, email, password,role) => {
     return new Promise((resolve, reject) => {
         const options = {
             method: "post",
@@ -83,7 +83,7 @@ export const SignUp = (name, email, password) => {
                 name,
                 email,
                 password,
-                role: "admin",
+                role,
             },   
         }
         axios(options).then((res) => {

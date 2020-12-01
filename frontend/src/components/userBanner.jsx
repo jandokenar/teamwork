@@ -59,7 +59,8 @@ const SignUpView = () => {
         const name = e.target["name"].value;
         const email = e.target["email"].value;
         const password = e.target["password"].value;
-        SignUp(name, email, password)
+        const role = e.target["role"].value;
+        SignUp(name, email, password, role)
             .then(() => {
                   Login(email, password)
                     .then(() => {
@@ -86,7 +87,6 @@ const SignUpView = () => {
           <input type="text" id="name"/>
           <br/>
 
-
           <label> Email: </label>
           <br/>
           <input type="email" id="email"/>
@@ -95,9 +95,16 @@ const SignUpView = () => {
           <label> Password: </label>
           <br/>
           <input type="password" id="password"/>
+
+          <br/>
+          Role:
+          <br/>
+          <input type="radio" value="customer" id="customer" name="role"/> 
+          <label for="customer"> customer </label>
+          <br/>
+          <input type="radio" value="admin" id="admin" name="role"/> 
+          <label for="customer"> admin </label>
           
-
-
           <br/>
           <button type="submit"> sign up </button>
           
