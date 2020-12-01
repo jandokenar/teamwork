@@ -29,16 +29,19 @@ const Book = () => {
             } else if (bookCopy.due && bookCopy.borrower === context.currentUser.id) {
                 return (
                     <label>
-                        <b>Due Date:&nbsp;&nbsp;</b>{bookCopy.due.substring(0, 10)}&nbsp;&nbsp;
                         <button onClick={() =>
                             ReturnBook(context, isbn, bookCopy.id, setBookUpdate)
                                 .then(() => { context.SetUserDataIsDirty(true) })}>
-                            Return</button>
+                            Return</button>&nbsp;&nbsp;
                     </label>
                 );
             } else if (!bookCopy.reserveList.find(element => element.reserveId === context.currentUser.id) ||
                 bookCopy.reserveList.length < 1) {
-                return (<button onClick={() => ReserveBook(context, isbn, bookCopy.id, setBookUpdate)}>Reserve</button>);
+                return (
+                    <label>
+                        <button onClick={() => ReserveBook(context, isbn, bookCopy.id, setBookUpdate)}>Reserve</button>&nbsp;&nbsp;
+                    </label>
+                );
             }
         }
     }
@@ -49,7 +52,7 @@ const Book = () => {
         if (userReservation) {
             return (
                 <label>
-                    <b>Reservations: </b> {
+                    <b>Reservations:&nbsp;&nbsp;</b> {
                         `${reserveList.indexOf(userReservation) + 1}/${reserveList.length}
                      is for you.`}
                 </label>
@@ -63,11 +66,18 @@ const Book = () => {
         }
     }
 
+    const ShowDueDate = (bookCopy) => {
+        if (bookCopy.due) {
+            return <label><b>Due Date:&nbsp;&nbsp;</b>{bookCopy.due.substring(0, 10)}&nbsp;&nbsp;</label>
+        }
+    }
+
     const MapCopies = () => {
         return (book.copies.map((key, index) =>
             <div key={index}>
                 {`${key.id}. (${key.status})`}&nbsp;&nbsp;
                 {ShowBookCopyActions(key)}
+                {ShowDueDate(key)}
                 &nbsp;&nbsp;{ShowReservations(key.reserveList)}
             </div>
         ));
