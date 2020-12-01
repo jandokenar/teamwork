@@ -8,6 +8,9 @@ const AddNewBook = () => {
 
     useEffect(() => {
         GetAllBooks(setBooks);
+        return () => {
+            setBooks([]);
+          };
     }, []);
 
     const HandleBookSubmit = (e) => {

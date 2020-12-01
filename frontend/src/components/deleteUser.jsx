@@ -4,17 +4,21 @@ import UserContext from "./userContext.js";
 const DeleteUser = () => {
     const [users, setUsers] = useState([]);
     const context = useContext(UserContext);
+
     useEffect(() => {
         GetAllUsers()
-            .then(response => {
-                setUsers(response);
-            })
+        .then(response => {
+            setUsers(response);
+        })
+        return () => {
+            setUsers([]);
+        };
     }, []);
     
     const handleDeleteUser = (id) => {
         DeleteOneUser(id)
             .then(response => {
-                  setUsers(users.filter(user => user.id !== id));
+                setUsers(users.filter(user => user.id !== id));
                 context.SetUserDataIsDirty(true);
             })
     }
