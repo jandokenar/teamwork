@@ -16,12 +16,11 @@ const AddNewBook = () => {
         AddBook(formData)
         .then(returnedBook => {
             setBooks(books.concat(returnedBook));
-            //setFormData({});
             setMessage("Book added to library.");
             document.getElementById("bookForm").reset();
             setTimeout(() => {
                 setMessage("")
-            }, 5000);
+            }, 1000);
         });
     }
 
