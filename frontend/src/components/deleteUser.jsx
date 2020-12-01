@@ -1,23 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { DeleteOneUser, GetAllUsers } from "../APIWrapper.js";
-
+import UserContext from "./userContext.js";
 const DeleteUser = () => {
     const [users, setUsers] = useState([]);
-
+    const context = useContext(UserContext);
     useEffect(() => {
         GetAllUsers()
-        .then(response => {
-            setUsers(response);
-        })
+            .then(response => {
+                setUsers(response);
+            })
     }, []);
-
+    
     const handleDeleteUser = (id) => {
         DeleteOneUser(id)
-        .then(response => 
-            setUsers(users.filter(user => user.id !== id))
-        )
+            .then(response => {
+                  setUsers(users.filter(user => user.id !== id));
+                context.SetUserDataIsDirty(true);
+            })
     }
-
+    
     return (
         <div>
             <p>Users:</p>
