@@ -60,7 +60,6 @@ const SignUpView = () => {
         const email = e.target["email"].value;
         const password = e.target["password"].value;
         const role = e.target["role"].value;
-        console.log(role);
         SignUp(name, email, password, role)
             .then(() => {
                   Login(email, password)
