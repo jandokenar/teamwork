@@ -72,7 +72,6 @@ const Book = () => {
         }
     }
 
-
     const MapCopies = () => {
         return (book.copies.map((key, index) =>
             <div key={index}>
