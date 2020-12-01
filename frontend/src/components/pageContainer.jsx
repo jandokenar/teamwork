@@ -18,7 +18,6 @@ const securityAccess = {
     "admin": 1,
 }
 const routeViewBindings = {
-    "Search Book" : <p> Tadaa </p>,
     "All Books" : <BookView/>,
     "Book" : <Book/>,
     "Add Book" : <AddNewBook />,
@@ -34,6 +33,7 @@ const PageContainer = () => {
           <Router>
             <div className="navBarWrapper">
               {Object.keys(routeViewBindings).map(it => {
+                if(it !=="Book"){
                   return (
                       <Link key={it} to={it.replace(" ", "")}>
                         <button className="navBarButton" >
@@ -41,7 +41,8 @@ const PageContainer = () => {
                         </button>
                       </Link>
                   )
-                  
+                }
+                return ("");
               })}                                                 
         </div>
             <div className="pageViewWrapper">
