@@ -9,6 +9,9 @@ const DeleteBook = () => {
 
     useEffect(() => {
         GetAllBooks(setBooks);
+        return () => {
+            setBooks([]);
+          };
     }, []);
 
     const HandleDeleteBook = (isbn, id) => {
