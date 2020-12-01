@@ -20,7 +20,7 @@ export const CreateTokens = (userID) => (
 );
 export const RenewAccessToken = (req, res) => {
     // Renew access token while refresh token is valid.
-    const tokens = CreateTokens(req.body.decoded.userID);
+    const tokens = CreateTokens(req.body.decoded.user.id);
     res.status(200).json({ token: tokens.token });
 };
 export const AuthenticateLocal = (req, res, next) => {
