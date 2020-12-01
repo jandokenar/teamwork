@@ -26,7 +26,7 @@ const routeViewBindings = {
     },
     "Book" : {
         hidden: true,
-        minSecAccess: securityAccess.customer,
+        offlineView: true,
         view: <Book/>,
     },
     "Add Book" : {
