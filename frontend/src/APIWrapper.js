@@ -83,6 +83,7 @@ export const SignUp = (name, email, password) => {
                 name,
                 email,
                 password,
+                role: "admin",
             },   
         }
         axios(options).then((res) => {

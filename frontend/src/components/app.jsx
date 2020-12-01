@@ -12,14 +12,12 @@ const App = () => {
     const [isLoggedIn, SetIsLoggedIn] = useState(accessToken? true : false);
     const [refreshInterval, SetRefreshInterval] = useState(null);
     const ClearState = () => {
-        console.log("Clearing state");
         SetCurrentUser({});
         SetIsLoggedIn(false);
         SetAccessToken(null);
         localStorage.removeItem("accessToken");
     }
     useEffect(() => {
-        console.log("User data update");
         const UpdateUserData = async () => {
             GetUserData(accessToken).then((user) => {
                 SetUserDataIsDirty(false);
@@ -63,9 +61,12 @@ const App = () => {
             <header className ="loginWrapper">
               <UserBanner/>
             </header>
+            
             <PageContainer/>
-            <footer className ="loginWrapper">
-              <p>THIS IS FOOTER</p>
+            
+            <footer className ="footerWrapper">
+              <h5>Learn & Code FULLSTACK 2020, Group-b</h5>
+              <p>Henrik Peteri, Arto Kujala, Matti Puuperä</p>
             </footer>
           </div>
         </UserContext.Provider>

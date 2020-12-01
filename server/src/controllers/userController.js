@@ -47,24 +47,26 @@ export const CreateNewUser = async (req, res) => {
         email,
         role,
     };
-
-    user.password = bcrypt.hashSync(req.body.password, 10);
-    user.registration_date = new Date();
-    user.fees = 0;
-    user.borrowed = [];
-    user.borrowedHistory = [];
-
-    const userData = new UserModel(user);
-    const field = ["_id"];
-    user.id = userData[field].toString();
-    userData.id = user.id;
-
-    await userData.save();
-    if (userData) {
-        res.status(200).json(user);
-    } else {
-        res.status(404).end();
+    const userDefined = await UserModel.findOne({ email });
+    if (!userDefined) {
+        user.password = bcrypt.hashSync(req.body.password, 10);
+        user.registration_date = new Date();
+        user.fees = 0;
+        user.borrowed = [];
+        user.borrowedHistory = [];
+        
+        const userData = new UserModel(user);
+        const field = ["_id"];
+        user.id = userData[field].toString();
+        userData.id = user.id;
+        
+        await userData.save();
+        if (userData) {
+            res.status(200).json(user);
+            return;
+        }
     }
+    res.status(404).end();
 };
 export const GetUserOrFail = async (req, res) => {
     const requester = req.body.user;
