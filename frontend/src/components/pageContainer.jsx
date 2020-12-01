@@ -9,21 +9,41 @@ import "../css/styleSheet.css";
 import DeleteOrUpdateBook from "./deleteOrUpdateBook.jsx";
 import DeleteUser from "./deleteUser";
 
-//@NOTE
-//Add new page here, Key is the text that is displayed on the nav button
-//Link is key without whitespace
-//value is the component which should be rendered in viewContainer
+//Determines if nav button is rendered to user
 const securityAccess = {
     "customer": 0,
     "admin": 1,
+    "hiddenForAll": 2, //If we wan't to hide nav buttons from every user.
 }
+//@NOTE
+//Add new page here, Key is the text that is displayed on the nav button
+//Link is key without whitespace
 const routeViewBindings = {
-    "All Books" : <BookView/>,
-    "Book" : <Book/>,
-    "Add Book" : <AddNewBook />,
-    "My Data":  <UserDataView/>,
-    "Delete Book" : <DeleteOrUpdateBook />,
-    "Delete User" : <DeleteUser />,
+    "All Books" : {
+        offlineView: true,
+        minSecAccess: securityAccess.customer,
+        view: <BookView/>,
+    },
+    "Book" : {
+        minSecAccess: securityAccess.hiddenForAll,
+        view: <Book/>,
+    },
+    "Add Book" : {
+        minSecAccess: securityAccess.admin,
+        view: <AddNewBook />,
+    },
+    "My Data":  {
+        minSecAccess: securityAccess.customer,
+        view: <UserDataView/>,
+    },
+    "Delete Book" : {
+        minSecAccess: securityAccess.admin,
+        view: <DeleteOrUpdateBook />,
+    },
+    "Delete User" : {
+        minSecAccess: securityAccess.admin,
+        view: <DeleteUser />,
+    },
 };
 
 const PageContainer = () => {
@@ -33,7 +53,14 @@ const PageContainer = () => {
           <Router>
             <div className="navBarWrapper">
               {Object.keys(routeViewBindings).map(it => {
-                if(it !=="Book"){
+                  //if route has offlineView set to 'true', or if user is logged in and
+                  //has the neccessary role
+                  const viewable = routeViewBindings[it].offlineView ||
+                        ((context.currentUser.email !== undefined) && 
+                         (securityAccess[context.currentUser.role] >= 
+                          routeViewBindings[it].minSecAccess));
+                                                  
+                  if(!viewable) return ("");
                   return (
                       <Link key={it} to={it.replace(" ", "")}>
                         <button className="navBarButton" >
@@ -41,8 +68,6 @@ const PageContainer = () => {
                         </button>
                       </Link>
                   )
-                }
-                return ("");
               })}                                                 
         </div>
             <div className="pageViewWrapper">
@@ -50,7 +75,7 @@ const PageContainer = () => {
                 const path = it.replace(" ", "");
                 return (
                     <Route exact key={it} path={`/${path}`}>
-                      {routeViewBindings[it]}
+                      {routeViewBindings[it].view}
                     </Route>
                 )})}
             </div>

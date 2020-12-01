@@ -1,41 +1,54 @@
 :root{
-    --mainColor: gray;
+    --mainColor: #707070;
     --itemColor: coral;
-    --mainBorder: dashed 3px black;
+    --mainBorder: 
 }
-
-.rootWrapper {
-    padding: 5px;
+body {
     background-color: var(--mainColor);
-    border: var(--mainBorder);
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.rootWrapper {
+    height: 100vh;
+    width: 100vw;
+    max-width: 100%;
+    background-color: var(--mainColor);
 }
 .loginWrapper {
+    width: 99%;
     padding: 5px;
     border: var(--mainBorder);
 }
 .footerWrapper {
+    width: 99%;
+    padding: 5px;
+    position: absolute;
+    bottom: 0px;
+    font-size: 14px;
     border: var(--mainBorder);
 }
 .pageWrapper {
-    padding: 5px;
     display: grid;
     grid-template-columns: 1fr 3fr;
     grid-template-areas:
     "navBar pageView "
 }
 .navBarWrapper {
-    border: var(--mainBorder);
     grid-area: navBar;
 }
 .navBarButton {
     border: none;
+    color: black;
     background-color: var(--itemColor);
     margin: 2px 0px;
     width: 100%;
     font-size: 20px;
 }
 .pageViewWrapper {
-    border: var(--mainBorder);
     grid-area: pageView
 }
 .bookListingWrapper {
