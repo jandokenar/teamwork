@@ -91,6 +91,16 @@ const TextOrInputField = (props) => {
         </div>
     )
 }
+
+export const PayFees = (context) => {
+    ModifyUserData({fees: 0}, context.accessToken).then((res) => {
+        console.log(res);
+        context.SetUserDataIsDirty(true);
+    }).catch((err) => {
+        console.log(err);
+    });
+}
+
 const UserDataView = () => {
     const [activeField, SetActiveField] = useState(-1);
     
@@ -125,7 +135,7 @@ const UserDataView = () => {
                               SetActiveField={SetActiveField}
                               objectFieldName={"password"}
                               />
-            <p> fees: {user.fees} €</p>
+            <p> fees: {user.fees} €&nbsp;&nbsp;<button onClick={() => PayFees(context)}>Pay Fees</button></p>
             <p> Borrowed: </p>
             <BorrowedBooksContainer/>
             <p> BorrowHistory: </p>

@@ -20,7 +20,7 @@ const BookView = () => {
                     <div key={index}>
                         <Link key={index} to={"book?isbn=" + key.isbn}>
                             {
-                                `Author: ${key.author} Title: ${key.title} (${key.published.substring(0, 4)})`
+                                `${key.author}: ${key.title} (${key.published.substring(0, 4)})`
                             }
                         </Link>
                     </div>
