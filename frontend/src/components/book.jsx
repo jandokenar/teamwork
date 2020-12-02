@@ -50,10 +50,11 @@ const Book = () => {
 
         const userReservation = reserveList.find(element => element.reserveId === context.currentUser.id);
         if (userReservation) {
+            const reservePos = reserveList.map( element => element.reserveId).indexOf(context.currentUser.id) + 1;
             return (
                 <label>
                     <b>Reservations:&nbsp;&nbsp;</b> {
-                        `${reserveList.indexOf(userReservation) + 1}/${reserveList.length}
+                        `${reservePos}/${reserveList.length}
                      is for you.`}
                 </label>
             );
