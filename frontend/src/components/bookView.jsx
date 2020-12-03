@@ -26,7 +26,7 @@ const BookView = () => {
         return 0;
     });
     
-    const showSearchedBooks = sortedBooks.filter(book => book[searchBy].toLowerCase().startsWith(search.toLowerCase()));
+    const showSearchedBooks = sortedBooks.filter(book => book[searchBy].toLowerCase().includes(search.toLowerCase()));
 
     const UpdateBookView = () => {
         return (
