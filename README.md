@@ -1,6 +1,47 @@
 # API Documentation
 [[_TOC_]]
 
+## Authentication
+
+`id` and `password` parameters have been removed from requests and accessToken is used instead. AccessToken is created by `login` request and has to be included in each request which has `id` and `password` defined. 
+
+| Request Methods | Endpoint  | Description |
+| --- | --- |--- |
+| POST   | /library/user/login/  | Creates accessToken if user credentials are valid
+| POST   | /library/user/logout/ | Clear cookies
+| POST   | /library/user/refresh/| Renews accessToken if refreshToken is valid
+
+### POST     /library/user/login/
+
+Creates accessToken if user credentials are valid
+
+| Parameter Key | Description|
+| ---  |---|
+| id | requester id |
+| password | requesters password |
+
+| Return Code | Return Value | Description |
+| ---  |---|---|
+| 200 | token: accessToken|
+
+
+### POST     /library/user/logout/
+
+Clear cookies
+
+| Return Code | Return Value | Description |
+| ---  |---|---|
+| 200 | token: null|
+
+
+### POST   /library/user/refresh/
+
+Renews accessToken if refreshToken is valid
+
+| Return Code | Return Value | Description |
+| ---  |---|---|
+| 200 | token: accessToken|
+
 ## User
 
 | Request Methods | Endpoint  | Description |
@@ -14,7 +55,6 @@
 | PUT    | /library/user/        | Modify user
 | PUT    | /library/user/reserve | Reserves book for user |
 | DELETE | /library/user/        | Delete user
-
 
 ### GET     /library/user/borrow  
 
@@ -88,8 +128,6 @@ Creates a new user
 | 200  | user []  |   |
 | 400  | { Error: "NotFound" } |  
 
-#### Remarks
-
 ### POST    /library/user/borrow  
 
 | Parameter Key | Description|
@@ -105,7 +143,6 @@ Creates a new user
 | 400  | { Error: "invalid password" } |  
 | 400  | { Error: "book not available" } |  
 
-#### Remarks
 
 
 ### POST    /library/user/return  
@@ -196,7 +233,6 @@ If user has books borrowed, request returns { 400, Error: "NotFound" }.
 | --- | --- |--- |
 | GET    | /library/book/       | Returns first book that matches search criteria
 | GET    | /library/book/all    | Returns all books
-| GET    | /library/book/seach  | Returns all books that match search criteria
 | POST   | /library/book/       | Add new book |
 | PUT    | /library/book/       | Update book  |
 | DELETE | /library/book/delete | Delete book
@@ -230,19 +266,6 @@ Returns all books that match filter
 
 #### Remarks
 Return code shouldn't ever be `400`, "NotFound". Empty array is a possible return value  
-
-### GET     /library/book/seach
-Returns all books that match search criteria
-
-| Parameter Key | Description|
-| ---  |---|
-|      |   |
-
-| Return Code | Return Value | Description |
-| ---  |---|---|
-|      |   |   |
-
-#### Remarks
 
 
 ### POST    /library/book/
@@ -282,9 +305,6 @@ Every field in replacement data is optional.
 | ---  |---|---|
 | 200  | updated book object |   |
 | 400  | { Error: "NotFound" } |   |
-
-#### Remarks
-
 
 ### DELETE  /library/book/delete
 Delete book
