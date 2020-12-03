@@ -1,9 +1,9 @@
 import fs from "fs";
-import express from "express";
 import bookModel from "./models/bookModel.js";
 import { addBook } from "./controllers/bookController.js";
+
 const sampleBookFile = "./src/sample_books.json";
-async function MaybeInitializeBookCollection(){
+async function MaybeInitializeBookCollection() {
     const count = await bookModel.countDocuments().exec();
     if (count) return;
     try {
@@ -26,15 +26,14 @@ async function MaybeInitializeBookCollection(){
                           published,
                           pages: pages.toString(),
                           description,
-                      }
+                      },
                   };
-            
-            const res = {status: () => {return {json: () => {}}}};
+
+            const res = { status: () => ({ json: () => {} }) };
             addBook(req, res);
         });
-        
     } catch (e) {
         console.log(e);
-    }    
+    }
 }
 export default MaybeInitializeBookCollection;

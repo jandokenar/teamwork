@@ -54,12 +54,12 @@ export const CreateNewUser = async (req, res) => {
         user.fees = 0;
         user.borrowed = [];
         user.borrowedHistory = [];
-        
+
         const userData = new UserModel(user);
         const field = ["_id"];
         user.id = userData[field].toString();
         userData.id = user.id;
-        
+
         await userData.save();
         if (userData) {
             res.status(200).json(user);

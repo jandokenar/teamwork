@@ -1,9 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
 import userRouter from "./routes/userRouter.js";
 import bookRouter from "./routes/bookRouter.js";
-import cookieParser from "cookie-parser";
-import MaybeInitializeBookCollection from "./SampleBookCollection.js"
 
 const requestLogger = (req, res, next) => {
     console.log(`METHOD: ${req.method}`);
@@ -42,7 +41,5 @@ app.use("/library/user/", userRouter);
 app.use("/library/book/", bookRouter);
 
 if (ConnectToDB()) {
-    console.log("Connected");
-    await MaybeInitializeBookCollection(); //not sure if we need to wait for this
     app.listen(port, () => console.log(`Listening to port ${port}`));
 }

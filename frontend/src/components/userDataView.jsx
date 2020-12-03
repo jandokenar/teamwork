@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import UserContext from "./userContext.js";
 import { ModifyUserData } from "../APIWrapper.js";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Link } from "react-router-dom";
 
 const BookLink = (props) => {
     const {book} = props;
