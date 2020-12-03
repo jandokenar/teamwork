@@ -3,6 +3,7 @@ import UserModel from "../models/userModel.js";
 import BookModel from "../models/bookModel.js";
 import { GetBookByID as GetBookByIsbn } from "./bookController.js";
 import { CreateTokens } from "../authentication.js";
+import { borrowTime, oneDay } from "../constants.js";
 // @NOTE
 // Authentication middleware adds user to request. (req.body.user)
 // If authentication fails, middleware return early and the specified endpoint is not reached.
@@ -128,7 +129,6 @@ export const ModifyUserOrFail = async (req, res) => {
     }
 };
 export const UserBorrowBook = async (req, res) => {
-    const weeks = 12096e5; // 2 week loan in ms
     const account = req.body.user;
 
     const bookIsbn = req.body.isbn;
@@ -136,7 +136,7 @@ export const UserBorrowBook = async (req, res) => {
     const coopyId = parseInt(req.body.copy, 10);
     const bookCopies = book.copies;
     const borrowDate = new Date();
-    const returnDate = new Date(Date.now() + weeks);
+    const returnDate = new Date(Date.now() + borrowTime);
     let bookAvailable = false;
 
     const updatedCopies = bookCopies.map((element) => {
@@ -216,7 +216,6 @@ export const ReserveBookForUserOrFail = async (req, res) => {
 };
 
 export const UserReturnBook = async (req, res) => {
-    const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
     const dailyFee = 1.5;
     const thisDay = new Date();
 
