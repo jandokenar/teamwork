@@ -7,11 +7,11 @@ const refreshSecretKey = "mysecretkey";
 const AT_EXPIRE_TIME = "15min";
 const RT_EXPIRE_TIME = "1h";
 
-//@NOTE:
-//accesstoken has UserModel.id
+// @NOTE:
+// accesstoken has UserModel.id
 
-//When 'accessToken' is authenticated. User is added to request as user (request.account)
-//When 'refreshToken' is authenticated, UserID is added to request as decoded (request.decoded)
+// When 'accessToken' is authenticated. User is added to request as user (request.account)
+// When 'refreshToken' is authenticated, UserID is added to request as decoded (request.decoded)
 export const CreateTokens = (userID) => (
     {
         token: jwt.sign({ userID }, secretKey, { expiresIn: AT_EXPIRE_TIME }),
@@ -31,10 +31,9 @@ export const AuthenticateLocal = (req, res, next) => {
         if (!it) return res.status(403).json({ Error: "Not Found" });
         const isMatch = bcrypt.compareSync(req.body.password, it.password);
         if (!isMatch) return res.status(403).json({ Error: "Not Authorized" });
-        req.body = {...req.body, userID: it.id };
+        req.body = { ...req.body, userID: it.id };
         next();
     });
-    return;
 };
 export const AuthenticateAccessToken = (req, res, next) => {
     if (!req.headers.authentication) return res.status(403).json({ Error: "NoToken" });
@@ -46,7 +45,7 @@ export const AuthenticateAccessToken = (req, res, next) => {
         UserModel.findOne({ id: decoded.userID }).then(async (it) => {
             if (!it) return res.status(403).json({ Error: "User Not Found" });
 
-            req.body = { ...req.body,  user: it };
+            req.body = { ...req.body, user: it };
             next();
         });
     });

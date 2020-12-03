@@ -16,41 +16,41 @@ import {
 import {
     AuthenticateLocal,
     AuthenticateAccessToken,
-    AuthenticateRefreshToken
+    AuthenticateRefreshToken,
 } from "../authentication.js";
 
 const userRouter = express.Router();
 
 userRouter.post("/login/",
-                AuthenticateLocal,
-                Login);
+    AuthenticateLocal,
+    Login);
 userRouter.post("/logout/",
-                Logout);
+    Logout);
 userRouter.post("/refresh",
-                AuthenticateRefreshToken,
-                RenewLogin);
+    AuthenticateRefreshToken,
+    RenewLogin);
 userRouter.get("/borrow/",
-               AuthenticateAccessToken,
-               GetUsersCurrentlyBorrowedBooksOrFail);
+    AuthenticateAccessToken,
+    GetUsersCurrentlyBorrowedBooksOrFail);
 userRouter.post("/",
-                CreateNewUser);
+    CreateNewUser);
 userRouter.post("/borrow/",
-                AuthenticateAccessToken,
-                UserBorrowBook);
+    AuthenticateAccessToken,
+    UserBorrowBook);
 userRouter.post("/return/",
-                AuthenticateAccessToken,
-                UserReturnBook);
+    AuthenticateAccessToken,
+    UserReturnBook);
 userRouter.get("/",
-               AuthenticateAccessToken,
-               GetUserOrFail);
+    AuthenticateAccessToken,
+    GetUserOrFail);
 userRouter.get("/all/",
-               GetAllUsersOrFail);
+    GetAllUsersOrFail);
 userRouter.put("/",
-               AuthenticateAccessToken,
-               ModifyUserOrFail);
+    AuthenticateAccessToken,
+    ModifyUserOrFail);
 userRouter.put("/reserve/",
-               AuthenticateAccessToken,
-               ReserveBookForUserOrFail);
+    AuthenticateAccessToken,
+    ReserveBookForUserOrFail);
 userRouter.delete("/", DeleteUserOrFail);
 
 export default userRouter;
