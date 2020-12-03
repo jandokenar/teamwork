@@ -22,8 +22,9 @@ Creates accessToken if user credentials are valid
 
 | Return Code | Return Value | Description |
 | ---  |---|---|
-| 200 | token: accessToken|
-
+| 200 | { token: accessToken } |
+| 403 | { Error: Not Authorized } | email isn't defined or wrong password
+| 404 | { Error: Not Found }| If user isn't found
 
 ### POST     /library/user/logout/
 
@@ -31,8 +32,7 @@ Clear cookies
 
 | Return Code | Return Value | Description |
 | ---  |---|---|
-| 200 | token: null|
-
+| 200 | { token: null } |
 
 ### POST   /library/user/refresh/
 
@@ -40,9 +40,15 @@ Renews accessToken if refreshToken is valid
 
 | Return Code | Return Value | Description |
 | ---  |---|---|
-| 200 | token: accessToken|
+| 200 | { token: accessToken }|
+| 403 | { Error: Verify Error }| jwt failed to verify token
 
 ## User
+
+Authenticate Access Token middleware @TEMP REMOVE ME !!!!
+| 403 | { Error: NoToken }| request doesn't have authentication headers
+| 403 | { Error: Verify Error }| jwt failed to verify token 
+| 404 | { Error: User Not Found } |
 
 | Request Methods | Endpoint  | Description |
 | --- | --- |--- |
@@ -60,17 +66,21 @@ Renews accessToken if refreshToken is valid
 
 | Parameter Key | Description|
 | ---  |---|
-| id | requester id |
-| password | requesters password |
+| id | requester id | Not Used, use AccessToken instead
+| password | requester password | Not Used, use AccessToken instead
 | filter | id of user to seach for |
 
 | Return Code | Return Value | Description |
 | ---  |---|---|
 | 200 | array of borrowed books Objects|
-| 400 |{ Error: "NotFound" }|
-         
+| 400 | { Error: "NotFound" }|
+| 403 | { Error: NoToken } | request doesn't have authentication headers
+| 403 | { Error: Verify Error } | jwt failed to verify token 
+| 404 | { Error: User Not Found } |
+
+
 #### Remarks
-filter `id` has to match parameter `id` or requester has to have "admin" role. Otherwise request returns { 400, Error: "NotFound" }.
+filter `id` has to match requester `id` or requester has to have "admin" role. Otherwise request returns { 400, Error: "NotFound" }.
 
 BorrowedBook Object
 
@@ -85,14 +95,17 @@ Get user
 
 | Parameter Key | Description|
 | ---  |---|
-| id   |    |
-| password | |
+| id   |    |  Not Used, use AccessToken instead
+| password | |  Not Used, use AccessToken instead
 | filter | resembles user fields which are used when filtering for an user |
           
 | Return Code | Return Value | Description |
 | ---  |---|---|
 | 200  | user Object that matches filter |   |
 | 400  | { Error: "NotFound" } |  |
+| 403 | { Error: NoToken } | request doesn't have authentication headers
+| 403 | { Error: Verify Error } | jwt failed to verify token 
+| 404 | { Error: User Not Found } |
 
 #### Remarks
 filter `id` has to match parameter `id` or requester has to have "admin" role. Otherwise request returns { 400, Error: "NotFound" }.
@@ -100,18 +113,11 @@ filter `id` has to match parameter `id` or requester has to have "admin" role. O
 ### GET     /library/user/all/
 Get all users
 
-| Parameter Key | Description|
-| ---  |---|
-| id   |    |
-| password| |
-
 | Return Code | Return Value | Description |
 | ---  |---|---|
 | 200  | users []  |   |
 | 400  | { Error: "NotFound" } |  
 
-#### Remarks
-Requesting user has to have "admin" role for this request to succeed.
 
 ### POST    /library/user/
 Creates a new user
@@ -125,15 +131,15 @@ Creates a new user
 
 | Return Code | Return Value | Description |
 | ---  |---|---|
-| 200  | user []  |   |
-| 400  | { Error: "NotFound" } |  
+| 200  | user Object |  |
+
 
 ### POST    /library/user/borrow  
 
 | Parameter Key | Description|
 | ---  |---|
-| id   | id of user |
-| password | password of user |
+| id   | id of user |  Not Used, use AccessToken instead
+| password | password of user |  Not Used, use AccessToken instead
 | isbn | isbn of book |
 | copy | copy id of book |
 
@@ -142,6 +148,9 @@ Creates a new user
 | 200  |  history[] |   |
 | 400  | { Error: "invalid password" } |  
 | 400  | { Error: "book not available" } |  
+| 403 | { Error: NoToken } | request doesn't have authentication headers
+| 403 | { Error: Verify Error } | jwt failed to verify token 
+| 404 | { Error: User Not Found } |
 
 
 
@@ -149,8 +158,8 @@ Creates a new user
 
 | Parameter Key | Description|
 | ---  |---|
-| id   | id of user |
-| password | password of user |
+| id   | id of user |  Not Used, use AccessToken instead
+| password | password of user |  Not Used, use AccessToken instead
 | isbn | isbn of book |
 | copy | copy id of book |
 
@@ -159,6 +168,10 @@ Creates a new user
 | 200  | book `Isbn` returned |   |
 | 400  | { Error: "invalid password" } |  
 | 400  | { Error: "loan not found" } |  
+| 403 | { Error: NoToken } | request doesn't have authentication headers
+| 403 | { Error: Verify Error } | jwt failed to verify token 
+| 404 | { Error: User Not Found } |
+
 
 #### Remarks
 If book is returned late adds 1.5€ fee per day to user
@@ -168,8 +181,8 @@ Modifies user
 
 | Parameter Key | Description|
 | ---  |---|
-| id | ID of the user who issued the request |
-| password | password string for the corresponding user |
+| id | ID of the user who issued the request |  Not Used, use AccessToken instead
+| password | password string for the corresponding user |  Not Used, use AccessToken instead
 | replacementData | user fields which to replace |
 
 
@@ -185,7 +198,11 @@ Every field in replacement data is optional.
 | Return Code | Return Value | Description |
 | ---  |---|---|
 | 200 | modified user object |
-| 400 | { Error : "NotFound" } | Something went wrong
+| 400 | { Error : "NotFound" } | non admin tried to modify other user
+| 403 | { Error: NoToken } | request doesn't have authentication headers
+| 403 | { Error: Verify Error } | jwt failed to verify token 
+| 404 | { Error: User Not Found } |
+
 
 #### Remarks
 if `id` is not specified in replacement data, then requester `id` is used.
@@ -198,8 +215,8 @@ Reserves a book for user
 
 | Parameter Key | Description|
 | ---  |---|
-| id | ID of the user to whom the book is reserved for |
-| password | password string for the corresponding user |
+| id | ID of the user to whom the book is reserved for | Not Used, use AccessToken instead
+| password | password string for the corresponding user | Not Used, use AccessToken instead
 | isbn | isbn number of the book which to reserve |
 | copy | book copy number |
 
@@ -210,6 +227,9 @@ Reserves a book for user
 | 400 | { Error: "CopyNotFound" } | Books copy wasn't found that matches `copy`
 | 400 | { Error: "BookNotFound" } | Book wasn't found that has a matching `isbn` 
 | 400 | { Error: "UserNotFound" } | `id` wasn't found or `password` was incorrect
+| 403 | { Error: NoToken } | request doesn't have authentication headers
+| 403 | { Error: Verify Error } | jwt failed to verify token 
+| 404 | { Error: User Not Found } |
 
 ### DELETE  /library/user/         
 Delete user
@@ -217,56 +237,41 @@ Delete user
 | Parameter Key | Description|
 | ---  |---|
 | id   | id of user which to delete |
-| password | |
 
 | Return Code | Return Value | Description |
 | ---  | --- | --- |
 | 200  | user Object which was deleted  |   |
 | 400  | { Error: "NotFound"} | 
 
-#### Remarks   
-If user has books borrowed, request returns { 400, Error: "NotFound" }.
-
 ## Book
 
 | Request Methods | Endpoint  | Description |
 | --- | --- |--- |
-| GET    | /library/book/       | Returns first book that matches search criteria
+| GET    | /library/book/:isbn  | Returns book with matching isbn
 | GET    | /library/book/all    | Returns all books
 | POST   | /library/book/       | Add new book |
 | PUT    | /library/book/       | Update book  |
 | DELETE | /library/book/delete | Delete book
 
-### GET     /library/book/
-Returns first book that matches filter
-
-| Parameter Key | Description|
-| ---    |---|
-| filter | resembles book fields which are used when filtering books |
-
+### GET     /library/book/:isbn
+Returns book with matching isbn
 
 | Return Code | Return Value | Description |
 | ---  |---|---|
-| 200  | Book []  | all books that match filter  |
+| 200  | Book object  | |
 | 400  | { Error: "NotFound"} |
 
 
 ### GET     /library/book/all
-Returns all books that match filter
-
-| Parameter Key | Description|
-| ---    |---|
-| filter | resembles book fields which are used when filtering books |
-
+Returns all books
 
 | Return Code | Return Value | Description |
 | ---  |---|---|
-| 200  | Book []  | all books that match filter  |
+| 200  | Book []  | |
 | 400  | { Error: "NotFound"} |
 
 #### Remarks
 Return code shouldn't ever be `400`, "NotFound". Empty array is a possible return value  
-
 
 ### POST    /library/book/
 Add new book
@@ -282,7 +287,7 @@ Add new book
 
 | Return Code | Return Value | Description |
 | ---  |---|---|
-| 200  | book object |   |
+| 200  | Book object |   |
 
 #### Remarks
 if book already in database, then adds copy of the book.
@@ -303,7 +308,7 @@ Every field in replacement data is optional.
 
 | Return Code | Return Value | Description |
 | ---  |---|---|
-| 200  | updated book object |   |
+| 200  | Updated book object |   |
 | 400  | { Error: "NotFound" } |   |
 
 ### DELETE  /library/book/delete

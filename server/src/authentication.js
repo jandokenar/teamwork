@@ -28,7 +28,7 @@ export const AuthenticateLocal = (req, res, next) => {
         return res.status(403).json({ Error: "Not Authorized" });
     }
     UserModel.findOne({ email: req.body.email }).then(async (it) => {
-        if (!it) return res.status(403).json({ Error: "Not Found" });
+        if (!it) return res.status(404).json({ Error: "Not Found" });
         const isMatch = bcrypt.compareSync(req.body.password, it.password);
         if (!isMatch) return res.status(403).json({ Error: "Not Authorized" });
         req.body = { ...req.body, userID: it.id };
@@ -40,10 +40,10 @@ export const AuthenticateAccessToken = (req, res, next) => {
     const token = req.headers.authentication.split(" ")[1];
     jwt.verify(token, secretKey, (err, decoded) => {
         if (err) {
-            return res.status(403).json(err);
+            return res.status(403).json({ Error: "Verify Error" });
         }
         UserModel.findOne({ id: decoded.userID }).then(async (it) => {
-            if (!it) return res.status(403).json({ Error: "User Not Found" });
+            if (!it) return res.status(404).json({ Error: "User Not Found" });
 
             req.body = { ...req.body, user: it };
             next();
@@ -56,7 +56,7 @@ export const AuthenticateRefreshToken = (req, res, next) => {
     } = req;
     jwt.verify(cookies.refreshToken, refreshSecretKey, (err, decoded) => {
         if (err) {
-            return res.status(403).json(err);
+            return res.status(403).json({ Error: "Verify Error" });
         }
         req.body = { ...req.body, decoded };
     });
