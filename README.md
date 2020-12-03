@@ -45,11 +45,6 @@ Renews accessToken if refreshToken is valid
 
 ## User
 
-Authenticate Access Token middleware @TEMP REMOVE ME !!!!
-| 403 | { Error: NoToken }| request doesn't have authentication headers
-| 403 | { Error: Verify Error }| jwt failed to verify token 
-| 404 | { Error: User Not Found } |
-
 | Request Methods | Endpoint  | Description |
 | --- | --- |--- |
 | GET    | /library/user/borrow  | Get users borrowed books
